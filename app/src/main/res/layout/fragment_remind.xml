@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".ui.remind.RemindFragment">
+    <Toolbar
+        android:id="@+id/tool_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/purple_700"
+        android:minHeight="?attr/actionBarSize"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="@style/ThemeOverlay.MaterialComponents.Toolbar.Primary">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/title_remind"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="15dp" />
+    </Toolbar>
+
+    <LinearLayout
+        android:id="@+id/num_reminder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/layout_radius_deep"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tool_bar">
+
+        <TextView
+            android:id="@+id/num_closeOverdue"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
+            android:layout_weight="1.0"
+            android:gravity="center_horizontal"
+            android:text="0"
+            android:textSize="100sp" />
+
+        <TextView
+            android:id="@+id/num_overdue"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="0dp"
+            android:layout_weight="1.0"
+            android:gravity="center_horizontal"
+            android:text="0"
+            android:textSize="100sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/label_reminder1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/num_reminder"
+        app:layout_constraintTop_toBottomOf="@+id/num_reminder">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal">
+
+            <ImageView
+                android:id="@+id/icon_closeOverdue"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="8dp"
+                android:src="@drawable/ic_close_overdue" />
+
+            <TextView
+                android:id="@+id/label_closeOverdue"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:text="@string/closeOverdue" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal">
+
+            <ImageView
+                android:id="@+id/icon_Overdue"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/ic_overdue" />
+
+            <TextView
+                android:id="@+id/label_overdue"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:text="@string/overdue" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/icon_internetAccount"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/ic_internet"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/label_reminder1" />
+
+    <TextView
+        android:id="@+id/label_internetAccount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/internetAccount"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toEndOf="@+id/icon_internetAccount"
+        app:layout_constraintTop_toTopOf="@+id/icon_internetAccount" />
+
+    <TextView
+        android:id="@+id/num_internetAccount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/label_internetAccount"
+        app:layout_constraintTop_toBottomOf="@+id/label_internetAccount" />
+
+    <ImageView
+        android:id="@+id/icon_editInternetAccount"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="16dp"
+        android:src="@drawable/ic_edit"
+        app:layout_constraintBottom_toBottomOf="@+id/icon_internetAccount"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/icon_internetAccount" />
+
+    <ImageView
+        android:id="@+id/icon_electricAccount"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/ic_electric"
+        app:layout_constraintStart_toStartOf="@+id/icon_internetAccount"
+        app:layout_constraintTop_toBottomOf="@+id/icon_internetAccount" />
+
+    <TextView
+        android:id="@+id/label_electricAccount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/electricAccount"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="@+id/label_internetAccount"
+        app:layout_constraintTop_toTopOf="@+id/icon_electricAccount" />
+
+    <TextView
+        android:id="@+id/num_electricAccount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/num_internetAccount"
+        app:layout_constraintTop_toBottomOf="@+id/label_electricAccount" />
+
+    <ImageView
+        android:id="@+id/icon_editElectricAccount"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_edit"
+        app:layout_constraintBottom_toBottomOf="@+id/icon_electricAccount"
+        app:layout_constraintEnd_toEndOf="@+id/icon_editInternetAccount"
+        app:layout_constraintTop_toTopOf="@+id/icon_electricAccount" />
+
+    <ImageView
+        android:id="@+id/icon_waterAccount"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/ic_water"
+        app:layout_constraintStart_toStartOf="@+id/icon_electricAccount"
+        app:layout_constraintTop_toBottomOf="@+id/icon_electricAccount" />
+
+    <TextView
+        android:id="@+id/label_waterAccount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/waterAccount"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="@+id/label_electricAccount"
+        app:layout_constraintTop_toTopOf="@+id/icon_waterAccount" />
+
+    <TextView
+        android:id="@+id/num_waterAccount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/num_electricAccount"
+        app:layout_constraintTop_toBottomOf="@+id/label_waterAccount" />
+
+    <ImageView
+        android:id="@+id/icon_editWaterAccount"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_edit"
+        app:layout_constraintBottom_toBottomOf="@+id/icon_waterAccount"
+        app:layout_constraintEnd_toEndOf="@+id/icon_editElectricAccount"
+        app:layout_constraintTop_toTopOf="@+id/icon_waterAccount" />
+
+    <ImageView
+        android:id="@+id/icon_gasAccount"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/ic_gas"
+        app:layout_constraintStart_toStartOf="@+id/icon_waterAccount"
+        app:layout_constraintTop_toBottomOf="@+id/icon_waterAccount" />
+
+    <TextView
+        android:id="@+id/label_gasAccount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/gasAccount"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="@+id/label_waterAccount"
+        app:layout_constraintTop_toTopOf="@+id/icon_gasAccount" />
+
+    <TextView
+        android:id="@+id/num_gasAccount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/num_waterAccount"
+        app:layout_constraintTop_toBottomOf="@+id/label_gasAccount" />
+
+    <ImageView
+        android:id="@+id/icon_editGasAccount"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_edit"
+        app:layout_constraintBottom_toBottomOf="@+id/icon_gasAccount"
+        app:layout_constraintEnd_toEndOf="@+id/icon_editWaterAccount"
+        app:layout_constraintTop_toTopOf="@+id/icon_gasAccount" />
+
+    <ImageView
+        android:id="@+id/icon_TVAccount"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/ic_tv"
+        app:layout_constraintStart_toStartOf="@+id/icon_gasAccount"
+        app:layout_constraintTop_toBottomOf="@+id/icon_gasAccount" />
+
+    <TextView
+        android:id="@+id/label_TVAccount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/TVAccount"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="@+id/label_gasAccount"
+        app:layout_constraintTop_toTopOf="@+id/icon_TVAccount" />
+
+    <TextView
+        android:id="@+id/num_TVAccount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/num_gasAccount"
+        app:layout_constraintTop_toBottomOf="@+id/label_TVAccount" />
+
+    <ImageView
+        android:id="@+id/icon_editTVAccount"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_edit"
+        app:layout_constraintBottom_toBottomOf="@+id/icon_TVAccount"
+        app:layout_constraintEnd_toEndOf="@+id/icon_editGasAccount"
+        app:layout_constraintTop_toTopOf="@+id/icon_TVAccount" />
+
+    <ImageView
+        android:id="@+id/icon_oilAccount"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/ic_oil"
+        app:layout_constraintStart_toStartOf="@+id/icon_TVAccount"
+        app:layout_constraintTop_toBottomOf="@+id/icon_TVAccount" />
+
+    <TextView
+        android:id="@+id/label_oilAccount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/oilAccount"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="@+id/label_TVAccount"
+        app:layout_constraintTop_toTopOf="@+id/icon_oilAccount" />
+
+    <TextView
+        android:id="@+id/num_oilAccount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/num_TVAccount"
+        app:layout_constraintTop_toBottomOf="@+id/label_oilAccount" />
+
+    <ImageView
+        android:id="@+id/icon_editOilAccount"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginBottom="4dp"
+        android:src="@drawable/ic_edit"
+        app:layout_constraintBottom_toBottomOf="@+id/icon_oilAccount"
+        app:layout_constraintEnd_toEndOf="@+id/icon_editTVAccount"
+        app:layout_constraintTop_toTopOf="@+id/icon_oilAccount" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/add_goods"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        app:backgroundTint="@color/purple_700"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_add" />
+</androidx.constraintlayout.widget.ConstraintLayout>

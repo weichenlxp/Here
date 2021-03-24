@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_remind">
+
+    <fragment
+        android:id="@+id/navigation_remind"
+        android:name="edu.hebut.here.ui.remind.RemindFragment"
+        android:label="@string/title_remind"
+        tools:layout="@layout/fragment_remind" />
+
+    <fragment
+        android:id="@+id/navigation_space"
+        android:name="edu.hebut.here.ui.space.SpaceFragment"
+        android:label="@string/title_space"
+        tools:layout="@layout/fragment_space" />
+
+    <fragment
+        android:id="@+id/navigation_pack"
+        android:name="edu.hebut.here.ui.pack.PackFragment"
+        android:label="@string/title_pack"
+        tools:layout="@layout/fragment_pack" />
+
+    <fragment
+        android:id="@+id/navigation_setting"
+        android:name="edu.hebut.here.ui.setting.SettingFragment"
+        android:label="@string/title_setting"
+        tools:layout="@layout/fragment_setting" />
+</navigation>

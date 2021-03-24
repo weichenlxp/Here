@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/purple_700"
+    tools:context=".SignActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/layout_radius_light"
+            android:padding="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/sign_profilePhoto"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/ic_add"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="用户名"
+                app:layout_constraintStart_toEndOf="@+id/imageView4"
+                app:layout_constraintStart_toStartOf="@+id/sign_username"
+                app:layout_constraintTop_toBottomOf="@+id/sign_profilePhoto" />
+
+            <TextView
+                android:id="@+id/tip_sign_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:textColor="#21525A"
+                app:layout_constraintBottom_toBottomOf="@+id/textView"
+                app:layout_constraintStart_toEndOf="@+id/textView" />
+
+            <ImageView
+                android:id="@+id/imageView4"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/ic_username"
+                app:layout_constraintBottom_toBottomOf="@+id/sign_username"
+                app:layout_constraintEnd_toStartOf="@+id/sign_username"
+                app:layout_constraintTop_toTopOf="@+id/sign_username"
+                app:layout_constraintVertical_bias="0.476" />
+
+            <EditText
+                android:id="@+id/sign_username"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/input_username"
+                android:inputType="text"
+                android:labelFor="@+id/sign_username"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="密码"
+                app:layout_constraintStart_toStartOf="@+id/sign_username"
+                app:layout_constraintTop_toBottomOf="@+id/sign_username" />
+
+            <TextView
+                android:id="@+id/tip_sign_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#21525A"
+                app:layout_constraintStart_toStartOf="@+id/tip_sign_username"
+                app:layout_constraintTop_toTopOf="@+id/textView2" />
+
+            <ImageView
+                android:id="@+id/imageView5"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/ic_password"
+                app:layout_constraintBottom_toBottomOf="@+id/sign_password"
+                app:layout_constraintEnd_toStartOf="@+id/sign_password"
+                app:layout_constraintTop_toTopOf="@+id/sign_password" />
+
+            <EditText
+                android:id="@+id/sign_password"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:autofillHints=""
+                android:hint="请输入密码"
+                android:inputType="textPassword"
+                android:labelFor="@+id/sign_password"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="密码"
+                app:layout_constraintStart_toStartOf="@+id/sign_password"
+                app:layout_constraintTop_toBottomOf="@+id/sign_password" />
+
+            <TextView
+                android:id="@+id/tip_sign_repassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#21525A"
+                app:layout_constraintStart_toStartOf="@+id/tip_sign_password"
+                app:layout_constraintTop_toTopOf="@+id/textView4" />
+
+            <ImageView
+                android:id="@+id/imageView6"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/ic_password"
+                app:layout_constraintBottom_toBottomOf="@+id/sign_repassword"
+                app:layout_constraintEnd_toStartOf="@+id/sign_repassword"
+                app:layout_constraintTop_toTopOf="@+id/sign_repassword" />
+
+            <EditText
+                android:id="@+id/sign_repassword"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:hint="请再次输入密码"
+                android:inputType="textPassword"
+                android:labelFor="@+id/sign_repassword"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="性别"
+                app:layout_constraintStart_toStartOf="@+id/sign_repassword"
+                app:layout_constraintTop_toBottomOf="@+id/sign_repassword" />
+
+            <TextView
+                android:id="@+id/tip_sign_gender"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#21525A"
+                app:layout_constraintStart_toStartOf="@+id/tip_sign_repassword"
+                app:layout_constraintTop_toTopOf="@+id/textView6" />
+
+            <ImageView
+                android:id="@+id/imageView7"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/ic_gender"
+                app:layout_constraintBottom_toBottomOf="@+id/sign_gender"
+                app:layout_constraintEnd_toStartOf="@+id/sign_gender"
+                app:layout_constraintTop_toTopOf="@+id/sign_gender" />
+
+            <RadioGroup
+                android:id="@+id/sign_gender"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="@+id/sign_repassword"
+                app:layout_constraintStart_toStartOf="@+id/sign_repassword"
+                app:layout_constraintTop_toBottomOf="@+id/textView6">
+
+                <RadioButton
+                    android:id="@+id/sign_male"
+                    android:layout_width="125dp"
+                    android:layout_height="wrap_content"
+                    android:text="男" />
+
+                <RadioButton
+                    android:id="@+id/sign_female"
+                    android:layout_width="125dp"
+                    android:layout_height="wrap_content"
+                    android:text="女" />
+
+            </RadioGroup>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <Button
+            android:id="@+id/btn_sign"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:background="@color/white"
+            android:text="sign"
+            android:textColor="@color/purple_700"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/constraintLayout"
+            app:layout_constraintStart_toStartOf="@+id/constraintLayout"
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="注册过的用户吗？"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_sign" />
+
+        <TextView
+            android:id="@+id/btn_log"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="点击登录"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView9" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

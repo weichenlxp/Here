@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Here</string>
+    <string name="title_remind">概览</string>
+    <string name="title_space">空间</string>
+    <string name="title_pack">打包</string>
+    <string name="title_setting">设置</string>
+    <string name="closeOverdue">即将过期</string>
+    <string name="overdue">已经过期</string>
+    <string name="internetAccount">宽带</string>
+    <string name="electricAccount">电表</string>
+    <string name="waterAccount">水表</string>
+    <string name="gasAccount">燃气</string>
+    <string name="socialSecurityAccount">社保</string>
+    <string name="TVAccount">有线电视</string>
+    <string name="oilAccount">加油卡</string>
+    <string name="heatingAccount">暖气</string>
+    <string name="title_activity_sign">SignActivity</string>
+    <string name="input_username">请输入用户名</string>
+    <string name="input_password">请输入密码</string>
+    <string name="input_repassword">请再次输入密码</string>
+    <string name="title_activity_add_house">住所</string>
+    <string name="title_activity_add_room">房间</string>
+    <string name="title_activity_add_furniture">家具</string>
+    <string name="title_activity_add_container">容器</string>
+    <string name="title_activity_add_category">类别</string>
+</resources>
