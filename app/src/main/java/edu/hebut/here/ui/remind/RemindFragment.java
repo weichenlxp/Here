@@ -26,10 +26,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import edu.hebut.here.R;
 
 import static edu.hebut.here.data.MyContentResolver.*;
-import static edu.hebut.here.data.MyContentResolver.queryAccountByHouseID;
-import static edu.hebut.here.data.MyContentResolver.queryCloseOvertimeGoods;
-import static edu.hebut.here.data.MyContentResolver.queryOvertimeGoods;
-import static edu.hebut.here.data.MyContentResolver.updateAccountByHouseIDAndName;
 
 
 public class RemindFragment extends Fragment {
@@ -52,15 +48,12 @@ public class RemindFragment extends Fragment {
     public void init(View root) {
         sharedPreferences = getContext().getSharedPreferences("here", Context.MODE_PRIVATE);
         userID = sharedPreferences.getInt("userID", -1);
-        goodsCursor = queryOvertimeGoods(getContext(), userID, new String[]{"_id"});
+        goodsCursor = queryGoods(getContext(), new String[]{"_id"}, "userID=? AND isOvertime=1",new String[]{String.valueOf(userID)});
         TextView over = root.findViewById(R.id.num_overdue);
         over.setText(String.valueOf(goodsCursor.getCount()));
-        goodsCursor = queryCloseOvertimeGoods(getContext(), userID, new String[]{"_id"});
+        goodsCursor = queryGoods(getContext(), new String[]{"_id"}, "userID=? AND isCloseOvertime=1",new String[]{String.valueOf(userID)});
         TextView closeOver = root.findViewById(R.id.num_closeOverdue);
         closeOver.setText(String.valueOf(goodsCursor.getCount()));
-
-
-
         account = new TextView[]{root.findViewById(R.id.num_internetAccount)
                 , root.findViewById(R.id.num_electricAccount)
                 , root.findViewById(R.id.num_waterAccount)
@@ -69,7 +62,7 @@ public class RemindFragment extends Fragment {
                 , root.findViewById(R.id.num_oilAccount)};
         sharedPreferences = getContext().getSharedPreferences("here", Context.MODE_PRIVATE);
         houseID = sharedPreferences.getInt("houseID", -1);
-        accountCursor = queryAccountByHouseID(getContext(), houseID, new String[]{"accountValue"});
+        accountCursor = queryAccount(getContext(), new String[]{"accountValue"}, "houseID=?", new String[]{String.valueOf(houseID)});
         for (TextView textView : account) {
             if (accountCursor.moveToNext()) {
                 textView.setText(accountCursor.getString(0));
@@ -100,27 +93,27 @@ public class RemindFragment extends Fragment {
                     String temp = editText.getText().toString();
                     switch (imageView.getId()) {
                         case R.id.icon_editInternetAccount:
-                            updateAccountByHouseIDAndName(getContext(), temp, houseID, "宽带");
+                            updateAccountValue(getContext(), temp, houseID, "宽带");
                             account[0].setText(temp);
                             break;
                         case R.id.icon_editElectricAccount:
-                            updateAccountByHouseIDAndName(getContext(), temp, houseID, "电表");
+                            updateAccountValue(getContext(), temp, houseID, "电表");
                             account[1].setText(temp);
                             break;
                         case R.id.icon_editWaterAccount:
-                            updateAccountByHouseIDAndName(getContext(), temp, houseID, "水表");
+                            updateAccountValue(getContext(), temp, houseID, "水表");
                             account[2].setText(temp);
                             break;
                         case R.id.icon_editGasAccount:
-                            updateAccountByHouseIDAndName(getContext(), temp, houseID, "燃气");
+                            updateAccountValue(getContext(), temp, houseID, "燃气");
                             account[3].setText(temp);
                             break;
                         case R.id.icon_editTVAccount:
-                            updateAccountByHouseIDAndName(getContext(), temp, houseID, "有线电视");
+                            updateAccountValue(getContext(), temp, houseID, "有线电视");
                             account[4].setText(temp);
                             break;
                         case R.id.icon_editOilAccount:
-                            updateAccountByHouseIDAndName(getContext(), temp, houseID, "加油卡");
+                            updateAccountValue(getContext(), temp, houseID, "加油卡");
                             account[5].setText(temp);
                             break;
                     }

@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 
 import edu.hebut.here.R;
-import edu.hebut.here.data.MyContentResolver;
+import static edu.hebut.here.data.MyContentResolver.*;
 
 public class AddRoomAdapter extends RecyclerView.Adapter<AddRoomAdapter.MyViewHolder> {
     SharedPreferences sharedPreferences;
@@ -36,7 +36,7 @@ public class AddRoomAdapter extends RecyclerView.Adapter<AddRoomAdapter.MyViewHo
         this.lContent = lContent;
         sharedPreferences = this.lContent.getSharedPreferences("here", Context.MODE_PRIVATE);
         houseID = sharedPreferences.getInt("houseID", -1);
-        Cursor roomCursor = MyContentResolver.queryRoomByHouseID(this.lContent, houseID, new String[]{"roomName"});
+        Cursor roomCursor = queryRoom(this.lContent, new String[]{"roomName"}, "houseID=?", new String[]{String.valueOf(houseID)});
         String[] temp = new String[roomCursor.getCount()];
         for (int i = 0;roomCursor.moveToNext();i++) {
             temp[i] = roomCursor.getString(0);
@@ -49,7 +49,7 @@ public class AddRoomAdapter extends RecyclerView.Adapter<AddRoomAdapter.MyViewHo
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         //获取列表中每行的布局文件
-        View view = LayoutInflater.from(lContent).inflate(R.layout.room_item, parent, false);
+        View view = LayoutInflater.from(lContent).inflate(R.layout.item_room, parent, false);
         return new MyViewHolder(view);
     }
 
@@ -64,9 +64,9 @@ public class AddRoomAdapter extends RecyclerView.Adapter<AddRoomAdapter.MyViewHo
             new android.app.AlertDialog.Builder(lContent).setIcon(R.drawable.ic_edit).setTitle("编辑房间").setView(dialogLayout).setPositiveButton("保存", ((dialog, which) -> {
                 EditText editText = dialogLayout.findViewById(R.id.edit_account);
                 String temp = editText.getText().toString();
-                Cursor cursor = MyContentResolver.queryRoomIDByRoomNameHouseID(lContent, temp, houseID);
+                Cursor cursor = queryRoom(lContent, new String[]{"_id"}, "roomName=? AND houseID=?", new String[]{temp, String.valueOf(houseID)});
                 if (cursor.getCount()==0){
-                    MyContentResolver.updateRoomNameByRoomName(lContent, temp, listName.get(position));
+                    updateRoomName(lContent, temp, listName.get(position), houseID);
                     holder.name.setText(temp);
                     listName.set(holder.getLayoutPosition(),temp);
                     Toast.makeText(this.lContent,"修改成功！",Toast.LENGTH_SHORT).show();
@@ -90,7 +90,7 @@ public class AddRoomAdapter extends RecyclerView.Adapter<AddRoomAdapter.MyViewHo
                 alterDialog.setMessage("删除后，与该房间所关联的账号、房间、家具以及物品都会被删除！");
                 alterDialog.setPositiveButton("确认", (dialog, which) -> {
                     int n = holder.getLayoutPosition();//获取要删除行的位置
-                    MyContentResolver.deleteRoomByRoomNameHouseID(lContent, roomName[n], houseID);
+                    deleteRoom(lContent, "roomName=? AND houseID=?", new String[]{roomName[n], String.valueOf(houseID)});
                     listName.remove(n);//删除行中名字
                     notifyItemRemoved(n);//删除行
                 });

@@ -25,11 +25,47 @@ public class MyContentResolver {
         context.getContentResolver().insert(uri_user, user);
     }
 
+    public static Cursor queryUser(Context context, String[] projection, String selection, String[] selectionArgs) {
+        return context.getContentResolver().query(uri_user, projection, selection, selectionArgs, null);
+    }
+
+    public static void updateUserProfilePhoto(Context context, byte[] profilePhoto, int userID) {
+        ContentValues user = new ContentValues();
+        user.put("profilePhoto", profilePhoto);
+        context.getContentResolver().update(uri_user, user, "_id=?", new String[]{String.valueOf(userID)});
+    }
+
+    public static void updateUserGender(Context context, String gender, int userID) {
+        ContentValues user = new ContentValues();
+        user.put("gender", gender);
+        context.getContentResolver().update(uri_user, user, "_id=?", new String[]{String.valueOf(userID)});
+    }
+
+    public static void updateUserReminderTime(Context context, int reminderTime, int userID) {
+        ContentValues user = new ContentValues();
+        user.put("reminderTime", reminderTime);
+        context.getContentResolver().update(uri_user, user, "_id=?", new String[]{String.valueOf(userID)});
+    }
+
     public static void createHouse(Context context, String houseName, int userID) {
         ContentValues house = new ContentValues();
         house.put("houseName", houseName);
         house.put("userID", userID);
         context.getContentResolver().insert(uri_house, house);
+    }
+
+    public static int deleteHouse(Context context, String where, String[] selectionArgs) {
+        return context.getContentResolver().delete(uri_house, where, selectionArgs);
+    }
+
+    public static void updateHouseName(Context context, String newHouseName, String houseName, int userID) {
+        ContentValues house = new ContentValues();
+        house.put("houseName", newHouseName);
+        context.getContentResolver().update(uri_house, house, "houseName=? AND userID=?", new String[]{houseName, String.valueOf(userID)});
+    }
+
+    public static Cursor queryHouse(Context context, String[] projection, String selection, String[] selectionArgs) {
+        return context.getContentResolver().query(uri_house, projection, selection, selectionArgs, null);
     }
 
     public static void createAccount(Context context, String accountName, int houseID) {
@@ -40,11 +76,35 @@ public class MyContentResolver {
         context.getContentResolver().insert(uri_account, account);
     }
 
+    public static Cursor queryAccount(Context context, String[] projection, String selection, String[] selectionArgs) {
+        return context.getContentResolver().query(uri_account, projection, selection, selectionArgs, null);
+    }
+
+    public static void updateAccountValue(Context context, String accountValue, int houseID, String accountName) {
+        ContentValues account = new ContentValues();
+        account.put("accountValue", accountValue);
+        context.getContentResolver().update(uri_account, account, "houseID=? and accountName=?", new String[]{String.valueOf(houseID), accountName});
+    }
+
     public static void createRoom(Context context, String roomName, int houseID) {
         ContentValues room = new ContentValues();
         room.put("roomName", roomName);
         room.put("houseID", houseID);
         context.getContentResolver().insert(uri_room, room);
+    }
+
+    public static Cursor queryRoom(Context context, String[] projection, String selection, String[] selectionArgs) {
+        return context.getContentResolver().query(uri_room, projection, selection, selectionArgs, null);
+    }
+
+    public static void updateRoomName(Context context, String newRoomName, String roomName, int houseID) {
+        ContentValues room = new ContentValues();
+        room.put("roomName", newRoomName);
+        context.getContentResolver().update(uri_room, room, "roomName=? AND houseID=?", new String[]{roomName, String.valueOf(houseID)});
+    }
+
+    public static int deleteRoom(Context context, String where, String[] selectionArgs) {
+        return context.getContentResolver().delete(uri_room, where, selectionArgs);
     }
 
     public static void createFurniture(Context context, String furnitureName, int roomID) {
@@ -54,6 +114,16 @@ public class MyContentResolver {
         context.getContentResolver().insert(uri_furniture, furniture);
     }
 
+    public static Cursor queryFurniture(Context context, String[] projection, String selection, String[] selectionArgs) {
+        return context.getContentResolver().query(uri_furniture, projection, selection, selectionArgs, null);
+    }
+
+    public static void updateFurnitureName(Context context, String newFurnitureName, String furnitureName, int roomID) {
+        ContentValues furniture = new ContentValues();
+        furniture.put("furnitureName", newFurnitureName);
+        context.getContentResolver().update(uri_furniture, furniture, "furnitureName=? AND roomID=?", new String[]{furnitureName, String.valueOf(roomID)});
+    }
+
     public static void createContainer(Context context, String containerName, int userID) {
         ContentValues container = new ContentValues();
         container.put("containerName", containerName);
@@ -61,11 +131,39 @@ public class MyContentResolver {
         context.getContentResolver().insert(uri_container, container);
     }
 
+    public static Cursor queryContainer(Context context, String[] projection, String selection, String[] selectionArgs) {
+        return context.getContentResolver().query(uri_container, projection, selection, selectionArgs, null);
+    }
+
+    public static void updateContainerName(Context context, String newContainerName, String containerName, int userID) {
+        ContentValues container = new ContentValues();
+        container.put("containerName", newContainerName);
+        context.getContentResolver().update(uri_container, container, "containerName=? AND userID=?", new String[]{containerName, String.valueOf(userID)});
+    }
+
+    public static int deleteContainer(Context context, String where, String[] selectionArgs) {
+        return context.getContentResolver().delete(uri_container, where, selectionArgs);
+    }
+
     public static void createCategory(Context context, String categoryName, int userID) {
         ContentValues category = new ContentValues();
         category.put("categoryName", categoryName);
         category.put("userID", userID);
         context.getContentResolver().insert(uri_category, category);
+    }
+
+    public static Cursor queryCategory(Context context, String[] projection, String selection, String[] selectionArgs) {
+        return context.getContentResolver().query(uri_category, projection, selection, selectionArgs, null);
+    }
+
+    public static void updateCategory(Context context, String newCategoryName, String categoryName, int userID) {
+        ContentValues category = new ContentValues();
+        category.put("categoryName", newCategoryName);
+        context.getContentResolver().update(uri_category, category, "categoryName=? AND userID=?", new String[]{categoryName, String.valueOf(userID)});
+    }
+
+    public static int deleteCategory(Context context, String where, String[] selectionArgs) {
+        return context.getContentResolver().delete(uri_category, where, selectionArgs);
     }
 
     public static void createGoods(Context context, String goodsName, int userID, int houseID, int roomID, int furnitureID, int categoryID, int containerID, int goodsNum, byte[] goodsPhoto1, byte[] goodsPhoto2, byte[] goodsPhoto3, String buyTime, String manufactureDate, String qualityGuaranteePeriod, String qualityGuaranteePeriodType, String overtime, boolean isOvertime, boolean isCloseOvertime, boolean packed, String remark) {
@@ -93,108 +191,7 @@ public class MyContentResolver {
         context.getContentResolver().insert(uri_goods, goods);
     }
 
-    public static Cursor queryUserIDByUsername(Context context, String username){
-        return context.getContentResolver().query(uri_user, new String[]{"_id"}, "username=?", new String[]{username}, null);
-    }
-
-    public static Cursor queryUserByUserID(Context context, int userID, String[] projection){
-        return context.getContentResolver().query(uri_user, projection, "_id=?", new String[]{String.valueOf(userID)}, null);
-    }
-
-    public static Cursor queryHouseIDByUserID(Context context, int userID){
-        return context.getContentResolver().query(uri_house, new String[]{"_id"}, "userID=?", new String[]{String.valueOf(userID)}, null);
-    }
-
-    public static Cursor queryHouseByUserID(Context context, int userID, String[] projection){
-        return context.getContentResolver().query(uri_house, projection, "userID=?", new String[]{String.valueOf(userID)}, null);
-    }
-
-    public static Cursor queryAccountByHouseID(Context context, int houseID, String[] projection){
-        return context.getContentResolver().query(uri_account, projection, "houseID=?", new String[]{String.valueOf(houseID)}, null);
-    }
-
-    public static void updateAccountByHouseIDAndName(Context context,String accountValue, int houseID, String accountName){
-        ContentValues account = new ContentValues();
-        account.put("accountValue", accountValue);
-        context.getContentResolver().update(uri_account, account, "houseID=? and accountName=?", new String[]{String.valueOf(houseID), accountName});
-    }
-
-    public static Cursor queryRoomByHouseID(Context context, int houseID, String[] projection){
-        return context.getContentResolver().query(uri_room, projection, "houseID=?", new String[]{String.valueOf(houseID)}, null);
-    }
-
-    public static Cursor queryRoomIDByRoomNameHouseID(Context context, String roomName, int houseID){
-        return context.getContentResolver().query(uri_room, new String[]{"_id"}, "roomName=? AND houseID=?", new String[]{roomName, String.valueOf(houseID)}, null);
-    }
-    public static Cursor queryFurnitureIDByFurnitureNameRoomID(Context context, String furnitureName, int roomID){
-        return context.getContentResolver().query(uri_furniture, new String[]{"_id"}, "furnitureName=? AND roomID=?", new String[]{furnitureName, String.valueOf(roomID)}, null);
-    }
-
-    public static Cursor queryContainerIDByContainerNameUserID(Context context, String containerName, int userID){
-        return context.getContentResolver().query(uri_container, new String[]{"_id"}, "containerName=? AND userID=?", new String[]{containerName, String.valueOf(userID)}, null);
-    }
-
-    public static Cursor queryCategoryIDByCategoryNameUserID(Context context, String categoryName, int userID){
-        return context.getContentResolver().query(uri_category, new String[]{"_id"}, "categoryName=? AND userID=?", new String[]{categoryName, String.valueOf(userID)}, null);
-    }
-
-    public static Cursor queryOvertimeGoods(Context context, int userID, String[] projection){
-        return context.getContentResolver().query(uri_goods, projection, "userID=? AND isOvertime=1", new String[]{String.valueOf(userID)}, null);
-    }
-
-    public static Cursor queryCloseOvertimeGoods(Context context, int userID, String[] projection){
-        return context.getContentResolver().query(uri_goods, projection, "userID=? AND isCloseOvertime=1", new String[]{String.valueOf(userID)}, null);
-    }
-
-    public static void updateHouseNameByHouseName(Context context, String newHouseName, String houseName) {
-        ContentValues house = new ContentValues();
-        house.put("houseName", newHouseName);
-        context.getContentResolver().update(uri_house, house, "houseName=?", new String[]{houseName});
-    }
-
-    public static int deleteHouseByHouseNameUserID(Context context, String houseName, int userID) {
-        return context.getContentResolver().delete(uri_house, "houseName=? AND userID=?", new String[]{houseName, String.valueOf(userID)});
-    }
-
-    public static Cursor queryHouseIDByHouseNameUserID(Context context, String houseName, int userID) {
-        return context.getContentResolver().query(uri_house, new String[]{"_id"}, "houseName=? AND userID=?", new String[]{houseName, String.valueOf(userID)}, null);
-    }
-
-    public static void updateRoomNameByRoomName(Context context, String newRoomName, String roomName) {
-        ContentValues room = new ContentValues();
-        room.put("roomName", newRoomName);
-        context.getContentResolver().update(uri_room, room, "roomName=?", new String[]{roomName});
-    }
-
-    public static int deleteRoomByRoomNameHouseID(Context context, String houseName, int userID) {
-        return context.getContentResolver().delete(uri_room, "houseName=? AND userID=?", new String[]{houseName, String.valueOf(userID)});
-    }
-
-    public static Cursor queryContainerByUserID(Context context, int userID, String[] projection){
-        return context.getContentResolver().query(uri_container, projection, "userID=?", new String[]{String.valueOf(userID)}, null);
-    }
-
-    public static void updateContainerNameByContainerName(Context context, String newContainerName, String containerName) {
-        ContentValues container = new ContentValues();
-        container.put("containerName", newContainerName);
-        context.getContentResolver().update(uri_container, container, "containerName=?", new String[]{containerName});
-    }
-
-    public static int deleteContainerByContainerNameUserID(Context context, String containerName, int userID) {
-        return context.getContentResolver().delete(uri_container, "containerName=? AND userID=?", new String[]{containerName, String.valueOf(userID)});
-    }
-
-    public static Cursor queryCategoryByUserID(Context context, int userID, String[] projection){
-        return context.getContentResolver().query(uri_category, projection, "userID=?", new String[]{String.valueOf(userID)}, null);
-    }
-
-    public static void updateCategoryNameByCategoryName(Context context, String newCategoryName, String categoryName) {
-        ContentValues category = new ContentValues();
-        category.put("categoryName", newCategoryName);
-        context.getContentResolver().update(uri_category, category, "categoryName=?", new String[]{categoryName});
-    }
-
-    public static int deleteCategoryByCategoryNameUserID(Context context, String categoryName, int userID) {
-        return context.getContentResolver().delete(uri_category, "categoryName=? AND userID=?", new String[]{categoryName, String.valueOf(userID)});
+    public static Cursor queryGoods(Context context, String[] projection, String selection, String[] selectionArgs) {
+        return context.getContentResolver().query(uri_goods, projection, selection, selectionArgs, null);
     }
 }

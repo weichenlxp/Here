@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import edu.hebut.here.R;
-import edu.hebut.here.data.MyContentResolver;
+import static edu.hebut.here.data.MyContentResolver.*;
 import edu.hebut.here.utils.AddCategoryAdapter;
 
 public class AddCategoryActivity extends AppCompatActivity {
@@ -38,9 +38,9 @@ public class AddCategoryActivity extends AppCompatActivity {
             new android.app.AlertDialog.Builder(this).setIcon(R.drawable.ic_edit).setTitle("创建类别").setView(dialogLayout).setPositiveButton("保存", ((dialog, which) -> {
                 EditText editText = dialogLayout.findViewById(R.id.edit_account);
                 String temp = editText.getText().toString();
-                Cursor cursor = MyContentResolver.queryCategoryIDByCategoryNameUserID(this, temp, userID);
+                Cursor cursor = queryCategory(this, new String[]{"_id"}, "categoryName=? AND userID=?", new String[]{temp, String.valueOf(userID)});
                 if (cursor.getCount()==0){
-                    MyContentResolver.createCategory(getApplicationContext(),temp, userID);
+                    createCategory(getApplicationContext(),temp, userID);
                     mRecyclerView.setAdapter(new AddCategoryAdapter(this));
                     Toast.makeText(this,"创建成功！",Toast.LENGTH_SHORT).show();
                 }

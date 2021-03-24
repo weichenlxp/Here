@@ -41,7 +41,7 @@ import java.util.Date;
 
 import edu.hebut.here.MainActivity;
 import edu.hebut.here.R;
-import edu.hebut.here.data.MyContentResolver;
+import static edu.hebut.here.data.MyContentResolver.*;
 import edu.hebut.here.utils.*;
 
 public class AddGoodsActivity extends AppCompatActivity {
@@ -171,24 +171,24 @@ public class AddGoodsActivity extends AppCompatActivity {
             sharedPreferences= getSharedPreferences("here", Context.MODE_PRIVATE);
             int userID = sharedPreferences.getInt("userID", -1);
             int houseID = sharedPreferences.getInt("houseID", -1);
-            Cursor roomCursor = MyContentResolver.queryRoomIDByRoomNameHouseID(getApplicationContext(), roomName, houseID);
+            Cursor roomCursor = queryRoom(this, new String[]{"_id"}, "roomName=? AND houseID=?", new String[]{roomName, String.valueOf(houseID)});
             int roomID = -1;
             while (roomCursor.moveToNext()) {
                 roomID = roomCursor.getInt(0);
             }
-            Cursor furnitureCursor = MyContentResolver.queryFurnitureIDByFurnitureNameRoomID(getApplicationContext(), furnitureName, roomID);
+            Cursor furnitureCursor = queryFurniture(getApplicationContext(), new String[]{"_id"}, "furnitureName=? AND roomID=?", new String[]{furnitureName, String.valueOf(roomID)});
             int furnitureID = -1;
             while (furnitureCursor.moveToNext()) {
                 furnitureID = furnitureCursor.getInt(0);
             }
-            Cursor categoryCursor = MyContentResolver.queryCategoryIDByCategoryNameUserID(getApplicationContext(), categoryName, userID);
+            Cursor categoryCursor = queryCategory(getApplicationContext(), new String[]{"_id"}, "categoryName=? AND userID=?", new String[]{categoryName, String.valueOf(userID)});
             int categoryID = -1;
             while (categoryCursor.moveToNext()) {
                 categoryID = categoryCursor.getInt(0);
             }
 
             if (qualityGuaranteePeriod.equals("") || qualityGuaranteePeriodType.equals("")) {
-                MyContentResolver.createGoods(getApplicationContext(), goodsName, userID, houseID, roomID, furnitureID, categoryID, -1, Integer.parseInt(goodsNum), goodsPhoto1, goodsPhoto2, goodsPhoto3, buyTime, manufactureDate, null, null, null, false, false, false, remark);
+                createGoods(getApplicationContext(), goodsName, userID, houseID, roomID, furnitureID, categoryID, -1, Integer.parseInt(goodsNum), goodsPhoto1, goodsPhoto2, goodsPhoto3, buyTime, manufactureDate, null, null, null, false, false, false, remark);
             }
             else {
                 Date nowDate = new Date();
@@ -198,7 +198,7 @@ public class AddGoodsActivity extends AppCompatActivity {
                 String overtime = DateUtils.fmtDateToYMD(overtimeDate);
                 boolean isOvertime;
                 isOvertime = DateUtils.compare_date(overtime, now) == -1;
-                MyContentResolver.createGoods(getApplicationContext(), goodsName, userID, houseID, roomID, furnitureID, categoryID, -1, Integer.parseInt(goodsNum), goodsPhoto1, goodsPhoto2, goodsPhoto3, buyTime, manufactureDate, qualityGuaranteePeriod, qualityGuaranteePeriodType, overtime, isOvertime, false, false, remark);
+                createGoods(getApplicationContext(), goodsName, userID, houseID, roomID, furnitureID, categoryID, -1, Integer.parseInt(goodsNum), goodsPhoto1, goodsPhoto2, goodsPhoto3, buyTime, manufactureDate, qualityGuaranteePeriod, qualityGuaranteePeriodType, overtime, isOvertime, false, false, remark);
             }
             AddGoodsActivity.this.finish();
             Intent intent=new Intent(AddGoodsActivity.this, edu.hebut.here.MainActivity.class);

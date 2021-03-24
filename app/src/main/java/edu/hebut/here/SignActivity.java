@@ -35,7 +35,7 @@ import androidx.core.content.FileProvider;
 import java.io.File;
 import java.io.FileOutputStream;
 
-import edu.hebut.here.data.MyContentResolver;
+import static edu.hebut.here.data.MyContentResolver.*;
 import edu.hebut.here.utils.*;
 
 public class SignActivity extends AppCompatActivity {
@@ -105,7 +105,7 @@ public class SignActivity extends AppCompatActivity {
 
         sign = findViewById(R.id.btn_sign);
         sign.setOnClickListener(view -> {
-            if (JudgeUtils.judgeExist(getApplicationContext(), MyContentResolver.uri_user, null, "username=?", new String[]{signUsername.getText().toString()}, null)) {
+            if (JudgeUtils.judgeExist(getApplicationContext(), uri_user, null, "username=?", new String[]{signUsername.getText().toString()}, null)) {
                 tipSignUsername.setText("已存在该用户");
             }
             else {
@@ -139,73 +139,73 @@ public class SignActivity extends AppCompatActivity {
                         username = signUsername.getText().toString();
                         password = signRePassword.getText().toString();
                         //建用户
-                        MyContentResolver.createUser(getApplicationContext(), username, password, gender, profilePhoto, 3);
-                        Cursor userCursor = MyContentResolver.queryUserIDByUsername(getApplicationContext(), username);
+                        createUser(getApplicationContext(), username, password, gender, profilePhoto, 3);
+                        Cursor userCursor = queryUser(getApplicationContext(), new String[]{"_id"}, "username=?", new String[]{username});
                         int userID = -1;
                         while (userCursor.moveToNext()) {
                             userID = userCursor.getInt(0);
                         }
                         //建住所
                         String houseName = username + "的家";
-                        MyContentResolver.createHouse(getApplicationContext(), houseName, userID);
-                        Cursor houseCursor = MyContentResolver.queryHouseIDByUserID(getApplicationContext(), userID);
+                        createHouse(getApplicationContext(), houseName, userID);
+                        Cursor houseCursor = queryHouse(getApplicationContext(), new String[]{"_id"}, "userID=?", new String[]{String.valueOf(userID)});
                         int houseID = -1;
                         while (houseCursor.moveToNext()) {
                             houseID = houseCursor.getInt(0);
                         }
                         //建账号
                         for (String account : accountName) {
-                            MyContentResolver.createAccount(getApplicationContext(), account, houseID);
+                            createAccount(getApplicationContext(), account, houseID);
 
                         }
                         //建房间
                         for (String room : roomName) {
-                            MyContentResolver.createRoom(getApplicationContext(), room, houseID);
+                            createRoom(getApplicationContext(), room, houseID);
                         }
                         //建家具
-                        Cursor roomCursor = MyContentResolver.queryRoomIDByRoomNameHouseID(getApplicationContext(), "客厅", houseID);
+                        Cursor roomCursor = queryRoom(getApplicationContext(), new String[]{"_id"}, "roomName=? AND houseID=?", new String[]{"客厅", String.valueOf(houseID)});
                         int roomID = -1;
                         while (roomCursor.moveToNext()) {
                             roomID = roomCursor.getInt(0);
                         }
                         for (String furniture : furnitureName1){
-                            MyContentResolver.createFurniture(getApplicationContext(), furniture, roomID);
+                            createFurniture(getApplicationContext(), furniture, roomID);
                         }
-                        roomCursor = MyContentResolver.queryRoomIDByRoomNameHouseID(getApplicationContext(), "主卧", houseID);
+                        roomCursor = queryRoom(getApplicationContext(), new String[]{"_id"}, "roomName=? AND houseID=?", new String[]{"主卧", String.valueOf(houseID)});
                         while (roomCursor.moveToNext()) {
                             roomID = roomCursor.getInt(0);
                         }
                         for (String furniture : furnitureName2){
-                            MyContentResolver.createFurniture(getApplicationContext(), furniture, roomID);
+                            createFurniture(getApplicationContext(), furniture, roomID);
                         }
-                        roomCursor = MyContentResolver.queryRoomIDByRoomNameHouseID(getApplicationContext(), "次卧", houseID);
+                        roomCursor = queryRoom(getApplicationContext(), new String[]{"_id"}, "roomName=? AND houseID=?", new String[]{"次卧", String.valueOf(houseID)});
                         while (roomCursor.moveToNext()) {
                             roomID = roomCursor.getInt(0);
                         }
                         for (String furniture : furnitureName3){
-                            MyContentResolver.createFurniture(getApplicationContext(), furniture, roomID);
+                            createFurniture(getApplicationContext(), furniture, roomID);
                         }
-                        roomCursor = MyContentResolver.queryRoomIDByRoomNameHouseID(getApplicationContext(), "厨房", houseID);
+                        roomCursor = queryRoom(getApplicationContext(), new String[]{"_id"}, "roomName=? AND houseID=?", new String[]{"厨房", String.valueOf(houseID)});
                         while (roomCursor.moveToNext()) {
                             roomID = roomCursor.getInt(0);
                         }
                         for (String furniture : furnitureName4){
-                            MyContentResolver.createFurniture(getApplicationContext(), furniture, roomID);
+                            createFurniture(getApplicationContext(), furniture, roomID);
                         }
-                        roomCursor = MyContentResolver.queryRoomIDByRoomNameHouseID(getApplicationContext(), "卫生间", houseID);
+                        roomCursor = queryRoom(getApplicationContext(), new String[]{"_id"}, "roomName=? AND houseID=?", new String[]{"卫生间", String.valueOf(houseID)});
                         while (roomCursor.moveToNext()) {
                             roomID = roomCursor.getInt(0);
                         }
                         for (String furniture : furnitureName5){
-                            MyContentResolver.createFurniture(getApplicationContext(), furniture, roomID);
+                            createFurniture(getApplicationContext(), furniture, roomID);
                         }
                         //建分类
                         for (String category : categoryName){
-                            MyContentResolver.createCategory(getApplicationContext(), category, userID);
+                            createCategory(getApplicationContext(), category, userID);
                         }
                         //建容器
                         for (String container : containerName){
-                            MyContentResolver.createContainer(getApplicationContext(), container, userID);
+                            createContainer(getApplicationContext(), container, userID);
                         }
 
                         Intent intent = new Intent(edu.hebut.here.SignActivity.this, edu.hebut.here.MainActivity.class);

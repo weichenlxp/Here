@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 
 import edu.hebut.here.R;
-import edu.hebut.here.data.MyContentResolver;
+import static edu.hebut.here.data.MyContentResolver.*;
 
 public class AddContainerAdapter extends RecyclerView.Adapter<AddContainerAdapter.MyViewHolder> {
     SharedPreferences sharedPreferences;
@@ -36,7 +36,7 @@ public class AddContainerAdapter extends RecyclerView.Adapter<AddContainerAdapte
         this.lContent = lContent;
         sharedPreferences = this.lContent.getSharedPreferences("here", Context.MODE_PRIVATE);
         userID = sharedPreferences.getInt("userID", -1);
-        Cursor containerCursor = MyContentResolver.queryContainerByUserID(this.lContent, userID, new String[]{"containerName"});
+        Cursor containerCursor = queryContainer(this.lContent, new String[]{"containerName"}, "userID=?", new String[]{String.valueOf(userID)});
         String[] temp = new String[containerCursor.getCount()];
         for (int i = 0;containerCursor.moveToNext();i++) {
             temp[i] = containerCursor.getString(0);
@@ -49,7 +49,7 @@ public class AddContainerAdapter extends RecyclerView.Adapter<AddContainerAdapte
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         //获取列表中每行的布局文件
-        View view = LayoutInflater.from(lContent).inflate(R.layout.container_item, parent, false);
+        View view = LayoutInflater.from(lContent).inflate(R.layout.item_container, parent, false);
         return new MyViewHolder(view);
     }
 
@@ -64,9 +64,9 @@ public class AddContainerAdapter extends RecyclerView.Adapter<AddContainerAdapte
             new android.app.AlertDialog.Builder(lContent).setIcon(R.drawable.ic_edit).setTitle("编辑容器").setView(dialogLayout).setPositiveButton("保存", ((dialog, which) -> {
                 EditText editText = dialogLayout.findViewById(R.id.edit_account);
                 String temp = editText.getText().toString();
-                Cursor cursor = MyContentResolver.queryContainerIDByContainerNameUserID(lContent, temp, userID);
+                Cursor cursor = queryContainer(lContent, new String[]{"_id"}, "containerName=? AND userID=?", new String[]{temp, String.valueOf(userID)});
                 if (cursor.getCount()==0){
-                    MyContentResolver.updateContainerNameByContainerName(lContent, temp, listName.get(position));
+                    updateContainerName(lContent, temp, listName.get(position), userID);
                     holder.name.setText(temp);
                     listName.set(holder.getLayoutPosition(),temp);
                     Toast.makeText(this.lContent,"修改成功！",Toast.LENGTH_SHORT).show();
@@ -89,7 +89,7 @@ public class AddContainerAdapter extends RecyclerView.Adapter<AddContainerAdapte
             alterDialog.setMessage("删除后，与该容器所关联的物品都会被删除！");
             alterDialog.setPositiveButton("确认", (dialog, which) -> {
                 int n = holder.getLayoutPosition();//获取要删除行的位置
-                MyContentResolver.deleteContainerByContainerNameUserID(lContent, containerName[n], userID);
+                deleteContainer(lContent, "containerName=? AND userID=?", new String[]{containerName[n], String.valueOf(userID)});
                 listName.remove(n);//删除行中名字
                 notifyItemRemoved(n);//删除行
             });

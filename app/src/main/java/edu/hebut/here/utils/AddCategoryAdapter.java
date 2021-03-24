@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 
 import edu.hebut.here.R;
-import edu.hebut.here.data.MyContentResolver;
+import static edu.hebut.here.data.MyContentResolver.*;
 
 public class AddCategoryAdapter extends RecyclerView.Adapter<AddCategoryAdapter.MyViewHolder> {
     SharedPreferences sharedPreferences;
@@ -36,7 +36,7 @@ public class AddCategoryAdapter extends RecyclerView.Adapter<AddCategoryAdapter.
         this.lContent = lContent;
         sharedPreferences = this.lContent.getSharedPreferences("here", Context.MODE_PRIVATE);
         userID = sharedPreferences.getInt("userID", -1);
-        Cursor categoryCursor = MyContentResolver.queryCategoryByUserID(this.lContent, userID, new String[]{"categoryName"});
+        Cursor categoryCursor = queryCategory(this.lContent, new String[]{"categoryName"}, "userID=?", new String[]{String.valueOf(userID)});
         String[] temp = new String[categoryCursor.getCount()];
         for (int i = 0;categoryCursor.moveToNext();i++) {
             temp[i] = categoryCursor.getString(0);
@@ -49,7 +49,7 @@ public class AddCategoryAdapter extends RecyclerView.Adapter<AddCategoryAdapter.
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         //获取列表中每行的布局文件
-        View view = LayoutInflater.from(lContent).inflate(R.layout.category_item, parent, false);
+        View view = LayoutInflater.from(lContent).inflate(R.layout.item_category, parent, false);
         return new MyViewHolder(view);
     }
 
@@ -64,9 +64,9 @@ public class AddCategoryAdapter extends RecyclerView.Adapter<AddCategoryAdapter.
             new android.app.AlertDialog.Builder(lContent).setIcon(R.drawable.ic_edit).setTitle("编辑类别").setView(dialogLayout).setPositiveButton("保存", ((dialog, which) -> {
                 EditText editText = dialogLayout.findViewById(R.id.edit_account);
                 String temp = editText.getText().toString();
-                Cursor cursor = MyContentResolver.queryCategoryIDByCategoryNameUserID(lContent, temp, userID);
+                Cursor cursor = queryCategory(lContent, new String[]{"_id"}, "categoryName=? AND userID=?", new String[]{temp, String.valueOf(userID)});
                 if (cursor.getCount()==0){
-                    MyContentResolver.updateCategoryNameByCategoryName(lContent, temp, listName.get(position));
+                    updateCategory(lContent, temp, listName.get(position), userID);
                     holder.name.setText(temp);
                     listName.set(holder.getLayoutPosition(),temp);
                     Toast.makeText(this.lContent,"修改成功！",Toast.LENGTH_SHORT).show();
@@ -90,7 +90,7 @@ public class AddCategoryAdapter extends RecyclerView.Adapter<AddCategoryAdapter.
                 alterDialog.setMessage("删除后，与该类别所关联的物品都会被删除！");
                 alterDialog.setPositiveButton("确认", (dialog, which) -> {
                     int n = holder.getLayoutPosition();//获取要删除行的位置
-                    MyContentResolver.deleteCategoryByCategoryNameUserID(lContent, categoryName[n], userID);
+                    deleteCategory(lContent, "categoryName=? AND userID=?", new String[]{categoryName[n], String.valueOf(userID)});
                     listName.remove(n);//删除行中名字
                     notifyItemRemoved(n);//删除行
                 });

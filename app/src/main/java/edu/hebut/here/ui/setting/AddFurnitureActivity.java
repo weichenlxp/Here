@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import edu.hebut.here.R;
-import edu.hebut.here.data.MyContentResolver;
+import static edu.hebut.here.data.MyContentResolver.*;
 import edu.hebut.here.utils.AddHouseAdapter;
 
 public class AddFurnitureActivity extends AppCompatActivity {
@@ -38,9 +38,9 @@ public class AddFurnitureActivity extends AppCompatActivity {
             new android.app.AlertDialog.Builder(this).setIcon(R.drawable.ic_edit).setTitle("创建住所").setView(dialogLayout).setPositiveButton("保存", ((dialog, which) -> {
                 EditText editText = dialogLayout.findViewById(R.id.edit_account);
                 String temp = editText.getText().toString();
-                Cursor cursor = MyContentResolver.queryHouseIDByHouseNameUserID(this, temp, userID);
+                Cursor cursor = queryHouse(this, new String[]{"_id"}, "houseName=? AND userID=?", new String[]{temp, String.valueOf(userID)});
                 if (cursor.getCount()==0){
-                    MyContentResolver.createHouse(getApplicationContext(),temp, userID);
+                    createHouse(getApplicationContext(),temp, userID);
                     mRecyclerView.setAdapter(new AddHouseAdapter(this));
                     Toast.makeText(this,"创建成功！",Toast.LENGTH_SHORT).show();
                 }

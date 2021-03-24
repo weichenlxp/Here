@@ -14,12 +14,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import edu.hebut.here.data.MyContentObserver;
-import edu.hebut.here.data.MyContentResolver;
-import edu.hebut.here.utils.*;
-
 import static edu.hebut.here.data.MyContentResolver.*;
-import static edu.hebut.here.data.MyContentResolver.queryHouseIDByUserID;
-import static edu.hebut.here.data.MyContentResolver.queryUserIDByUsername;
+import edu.hebut.here.utils.JudgeUtils;
 
 public class LoginActivity extends AppCompatActivity {
     SharedPreferences sharedPreferences;
@@ -55,16 +51,16 @@ public class LoginActivity extends AppCompatActivity {
         login.setOnClickListener(v -> {
             username = loginUsername.getText().toString();
             password = loginPassword.getText().toString();
-            if (!JudgeUtils.judgeExist(getApplicationContext(), MyContentResolver.uri_user, new String[]{"_id"}, "username=? and password=?", new String[]{username,password},null)){
+            if (!JudgeUtils.judgeExist(getApplicationContext(), uri_user, new String[]{"_id"}, "username=? and password=?", new String[]{username,password},null)){
                 tipLoginUsername.setText("用户名错误或密码错误");
             }
             else {
-                Cursor userCursor = queryUserIDByUsername(this, username);
+                Cursor userCursor = queryUser(this, new String[]{"_id"}, "username=?", new String[]{username});
                 int userID = -1;
                 while (userCursor.moveToNext()) {
                     userID = userCursor.getInt(0);
                 }
-                Cursor houseCursor = queryHouseIDByUserID(this, userID);
+                Cursor houseCursor = queryHouse(getApplicationContext(), new String[]{"_id"}, "userID=?", new String[]{String.valueOf(userID)});
                 int houseID = -1;
                 if (houseCursor.moveToNext()) {
                     houseID = houseCursor.getInt(0);

@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 
 import edu.hebut.here.R;
-import edu.hebut.here.data.MyContentResolver;
+import static edu.hebut.here.data.MyContentResolver.*;
 
 public class AddFurnitureAdapter extends RecyclerView.Adapter<AddFurnitureAdapter.MyViewHolder> {
     SharedPreferences sharedPreferences;
@@ -36,7 +36,7 @@ public class AddFurnitureAdapter extends RecyclerView.Adapter<AddFurnitureAdapte
         this.lContent = lContent;
         sharedPreferences = this.lContent.getSharedPreferences("here", Context.MODE_PRIVATE);
         userID = sharedPreferences.getInt("userID", -1);
-        Cursor houseCursor = MyContentResolver.queryHouseByUserID(this.lContent, userID, new String[]{"houseName"});
+        Cursor houseCursor = queryHouse(this.lContent, new String[]{"houseName"}, "userID=?", new String[]{String.valueOf(userID)});
         String[] temp = new String[houseCursor.getCount()];
         for (int i = 0;houseCursor.moveToNext();i++) {
             temp[i] = houseCursor.getString(0);
@@ -49,7 +49,7 @@ public class AddFurnitureAdapter extends RecyclerView.Adapter<AddFurnitureAdapte
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         //获取列表中每行的布局文件
-        View view = LayoutInflater.from(lContent).inflate(R.layout.house_item, parent, false);
+        View view = LayoutInflater.from(lContent).inflate(R.layout.item_house, parent, false);
         return new MyViewHolder(view);
     }
 
@@ -64,9 +64,9 @@ public class AddFurnitureAdapter extends RecyclerView.Adapter<AddFurnitureAdapte
             new android.app.AlertDialog.Builder(lContent).setIcon(R.drawable.ic_edit).setTitle("编辑住所").setView(dialogLayout).setPositiveButton("保存", ((dialog, which) -> {
                 EditText editText = dialogLayout.findViewById(R.id.edit_account);
                 String temp = editText.getText().toString();
-                Cursor cursor = MyContentResolver.queryHouseIDByHouseNameUserID(lContent, temp, userID);
+                Cursor cursor = queryHouse(lContent, new String[]{"_id"}, "houseName=? AND userID=?", new String[]{temp, String.valueOf(userID)});
                 if (cursor.getCount()==0){
-                    MyContentResolver.updateHouseNameByHouseName(lContent, temp, listName.get(position));
+                    updateHouseName(lContent, temp, listName.get(position), userID);
                     holder.name.setText(temp);
                     listName.set(holder.getLayoutPosition(),temp);
                     Toast.makeText(this.lContent,"修改成功！",Toast.LENGTH_SHORT).show();
@@ -90,7 +90,7 @@ public class AddFurnitureAdapter extends RecyclerView.Adapter<AddFurnitureAdapte
                 alterDialog.setMessage("删除后，与该住所所关联的账号、房间、家具以及物品都会被删除！");
                 alterDialog.setPositiveButton("确认", (dialog, which) -> {
                     int n = holder.getLayoutPosition();//获取要删除行的位置
-                    MyContentResolver.deleteHouseByHouseNameUserID(lContent, houseName[n], userID);
+                    deleteHouse(lContent, "houseName=? AND userID=?", new String[]{houseName[n], String.valueOf(userID)});
                     listName.remove(n);//删除行中名字
                     notifyItemRemoved(n);//删除行
                 });

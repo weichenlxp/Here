@@ -24,7 +24,7 @@ import androidx.fragment.app.Fragment;
 
 import edu.hebut.here.R;
 import edu.hebut.here.WelcomeActivity;
-import edu.hebut.here.data.MyContentResolver;
+import static edu.hebut.here.data.MyContentResolver.*;
 
 public class SettingFragment extends Fragment {
     SharedPreferences sharedPreferences;
@@ -40,7 +40,7 @@ public class SettingFragment extends Fragment {
         ImageView profilePhoto = root.findViewById(R.id.profilePhoto);
         sharedPreferences= requireContext().getSharedPreferences("here", Context.MODE_PRIVATE);
         userID = sharedPreferences.getInt("userID",-1);
-        Cursor userCursor = MyContentResolver.queryUserByUserID(requireContext(), userID, new String[]{"profilePhoto","username","gender","reminderTime"});
+        Cursor userCursor = queryUser(requireContext(), new String[]{"profilePhoto","username","gender","reminderTime"}, "_id=?", new String[]{String.valueOf(userID)});
         byte[] profilePhotoByte = null;
         String username = "";
         String gender = "";
@@ -72,7 +72,7 @@ public class SettingFragment extends Fragment {
                     editText.setText(String.valueOf(reminderTime));
                     new AlertDialog.Builder(getContext()).setIcon(R.drawable.ic_edit).setTitle("更改提前通知天数").setView(dialogLayout).setPositiveButton("保存",((dialog, which) -> {
                         int temp = Integer.parseInt(editText.getText().toString());
-                        Toast.makeText(getActivity(),String.valueOf(temp),Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(),String.valueOf(temp),Toast.LENGTH_LONG).show();//!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                     })).setNegativeButton("取消",(dialog, which) -> {
                     }).create().show();
                     break;
