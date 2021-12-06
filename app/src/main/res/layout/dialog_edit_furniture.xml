@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/label_edit_furniture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="输入新的家具名称："
+        app:layout_constraintBottom_toBottomOf="@+id/edit_furniture"
+        app:layout_constraintEnd_toStartOf="@+id/edit_furniture"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/edit_furniture" />
+
+    <EditText
+        android:id="@+id/edit_furniture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="text"
+        android:maxLength="20"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/label_edit_furniture"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/label_house"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="选择放置的住所："
+        app:layout_constraintBottom_toBottomOf="@+id/house"
+        app:layout_constraintStart_toStartOf="@+id/label_edit_furniture"
+        app:layout_constraintTop_toTopOf="@+id/house" />
+
+    <Spinner
+        android:id="@+id/house"
+        android:layout_width="210dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="@+id/edit_furniture"
+        app:layout_constraintStart_toStartOf="@+id/edit_furniture"
+        app:layout_constraintTop_toBottomOf="@+id/edit_furniture" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="选择放置的房间："
+        app:layout_constraintBottom_toBottomOf="@+id/room"
+        app:layout_constraintStart_toStartOf="@+id/label_house"
+        app:layout_constraintTop_toTopOf="@+id/room" />
+
+    <Spinner
+        android:id="@+id/room"
+        android:layout_width="210dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="@+id/house"
+        app:layout_constraintStart_toStartOf="@+id/house"
+        app:layout_constraintTop_toBottomOf="@+id/house" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

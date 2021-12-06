@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.MainActivity">
+
+    <EditText
+        android:id="@+id/idnumber"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:hint="请输入账号"
+        android:textColor="#03DAC5"
+        android:textColorHint="#03DAC5"
+        app:layout_constraintBottom_toTopOf="@+id/regerest"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.52"
+        tools:ignore="MissingConstraints" />
+
+    <EditText
+        android:id="@+id/pwdnumber"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:hint="请输入密码"
+        android:textColor="#03DAC5"
+        android:textColorHint="#03DAC5"
+        app:layout_constraintBottom_toTopOf="@+id/regerest"
+        app:layout_constraintEnd_toEndOf="@+id/idnumber"
+        app:layout_constraintStart_toStartOf="@+id/idnumber"
+        app:layout_constraintTop_toBottomOf="@+id/idnumber"
+        tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/regerest"
+        android:layout_width="106dp"
+        android:layout_height="67dp"
+        android:text="注册"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
