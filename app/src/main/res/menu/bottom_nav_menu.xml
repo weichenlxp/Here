@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_remind"
+        android:icon="@drawable/ic_remind"
+        android:title="@string/title_remind" />
+
+    <item
+        android:id="@+id/navigation_space"
+        android:icon="@drawable/ic_space"
+        android:title="@string/title_space" />
+
+    <item
+        android:id="@+id/navigation_pack"
+        android:icon="@drawable/ic_pack"
+        android:title="@string/title_pack" />
+
+    <item
+        android:id="@+id/navigation_setting"
+        android:icon="@drawable/ic_setting"
+        android:title="@string/title_setting" />
+</menu>

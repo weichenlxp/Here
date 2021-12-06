@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="SpinnerItem">
+        <item>天</item>
+        <item>月</item>
+        <item>年</item>
+    </string-array>
+
+    <string-array name="setting_normal">
+        <item>过期物品提前通知</item>
+        <item>住所</item>
+        <item>房间</item>
+        <item>家具</item>
+        <item>容器</item>
+        <item>种类</item>
+    </string-array>
+    <string-array name="setting_security">
+        <item>密码</item>
+        <item>导出为表格</item>
+    </string-array>
+    <string-array name="setting_other">
+        <item>联系开发者</item>
+        <item>评分</item>
+        <item>关于</item>
+    </string-array>
+</resources>
