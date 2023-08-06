@@ -7,7 +7,7 @@
     </string-array>
 
     <string-array name="setting_normal">
-        <item>过期物品提前通知</item>
+        <item>临期物品判定条件</item>
         <item>住所</item>
         <item>房间</item>
         <item>家具</item>
@@ -15,13 +15,12 @@
         <item>种类</item>
     </string-array>
     <string-array name="setting_security">
-        <item>密码和指纹</item>
+        <item>密码</item>
         <item>导出为表格</item>
     </string-array>
     <string-array name="setting_other">
         <item>联系开发者</item>
         <item>评分</item>
-        <item>FAQ</item>
         <item>关于</item>
     </string-array>
 </resources>

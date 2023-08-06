@@ -32,19 +32,19 @@ public class MyContentResolver {
     public static void updateUserProfilePhoto(Context context, byte[] profilePhoto, int userID) {
         ContentValues user = new ContentValues();
         user.put("profilePhoto", profilePhoto);
-        context.getContentResolver().update(uri_user, user, "_id=?", new String[]{String.valueOf(userID)});
+        context.getContentResolver().update(uri_user, user, "userID=?", new String[]{String.valueOf(userID)});
     }
 
     public static void updateUserGender(Context context, String gender, int userID) {
         ContentValues user = new ContentValues();
         user.put("gender", gender);
-        context.getContentResolver().update(uri_user, user, "_id=?", new String[]{String.valueOf(userID)});
+        context.getContentResolver().update(uri_user, user, "userID=?", new String[]{String.valueOf(userID)});
     }
 
     public static void updateUserReminderTime(Context context, int reminderTime, int userID) {
         ContentValues user = new ContentValues();
         user.put("reminderTime", reminderTime);
-        context.getContentResolver().update(uri_user, user, "_id=?", new String[]{String.valueOf(userID)});
+        context.getContentResolver().update(uri_user, user, "userID=?", new String[]{String.valueOf(userID)});
     }
 
     public static void createHouse(Context context, String houseName, int userID) {
@@ -86,42 +86,62 @@ public class MyContentResolver {
         context.getContentResolver().update(uri_account, account, "houseID=? and accountName=?", new String[]{String.valueOf(houseID), accountName});
     }
 
-    public static void createRoom(Context context, String roomName, int houseID) {
+    public static void createRoom(Context context, String roomName, int houseID, int userID) {
         ContentValues room = new ContentValues();
         room.put("roomName", roomName);
         room.put("houseID", houseID);
+        room.put("userID", userID);
         context.getContentResolver().insert(uri_room, room);
     }
 
-    public static Cursor queryRoom(Context context, String[] projection, String selection, String[] selectionArgs) {
-        return context.getContentResolver().query(uri_room, projection, selection, selectionArgs, null);
+    public static Cursor queryRoom(Context context, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+        return context.getContentResolver().query(uri_room, projection, selection, selectionArgs, sortOrder);
     }
 
-    public static void updateRoomName(Context context, String newRoomName, String roomName, int houseID) {
+    public static void updateRoomName(Context context, String newRoomName, int houseID, int roomID) {
         ContentValues room = new ContentValues();
         room.put("roomName", newRoomName);
-        context.getContentResolver().update(uri_room, room, "roomName=? AND houseID=?", new String[]{roomName, String.valueOf(houseID)});
+        room.put("houseID", houseID);
+        context.getContentResolver().update(uri_room, room, "roomID=?", new String[]{String.valueOf(roomID)});
     }
 
     public static int deleteRoom(Context context, String where, String[] selectionArgs) {
         return context.getContentResolver().delete(uri_room, where, selectionArgs);
     }
 
-    public static void createFurniture(Context context, String furnitureName, int roomID) {
+    public static void createFurniture(Context context, String furnitureName, int userID, int houseID, int roomID) {
         ContentValues furniture = new ContentValues();
         furniture.put("furnitureName", furnitureName);
+        furniture.put("userID", userID);
+        furniture.put("houseID", houseID);
         furniture.put("roomID", roomID);
         context.getContentResolver().insert(uri_furniture, furniture);
     }
+
+//    public static void createFurniture(Context context, String furnitureName, byte[] furniturePic, int userID, int houseID, int roomID) {
+//        ContentValues furniture = new ContentValues();
+//        furniture.put("furnitureName", furnitureName);
+//        furniture.put("furniturePic", furniturePic);
+//        furniture.put("userID", userID);
+//        furniture.put("houseID", houseID);
+//        furniture.put("roomID", roomID);
+//        context.getContentResolver().insert(uri_furniture, furniture);
+//    }
 
     public static Cursor queryFurniture(Context context, String[] projection, String selection, String[] selectionArgs) {
         return context.getContentResolver().query(uri_furniture, projection, selection, selectionArgs, null);
     }
 
-    public static void updateFurnitureName(Context context, String newFurnitureName, String furnitureName, int roomID) {
+    public static void updateFurnitureName(Context context, String newFurnitureName, int houseID, int roomID, int furnitureID) {
         ContentValues furniture = new ContentValues();
         furniture.put("furnitureName", newFurnitureName);
-        context.getContentResolver().update(uri_furniture, furniture, "furnitureName=? AND roomID=?", new String[]{furnitureName, String.valueOf(roomID)});
+        furniture.put("houseID", houseID);
+        furniture.put("roomID", roomID);
+        context.getContentResolver().update(uri_furniture, furniture, "furnitureID=?", new String[]{String.valueOf(furnitureID)});
+    }
+
+    public static int deleteFurniture(Context context, String where, String[] selectionArgs) {
+        return context.getContentResolver().delete(uri_furniture, where, selectionArgs);
     }
 
     public static void createContainer(Context context, String containerName, int userID) {
@@ -193,5 +213,45 @@ public class MyContentResolver {
 
     public static Cursor queryGoods(Context context, String[] projection, String selection, String[] selectionArgs) {
         return context.getContentResolver().query(uri_goods, projection, selection, selectionArgs, null);
+    }
+
+    public static int deleteGoods(Context context, String where, String[] selectionArgs) {
+        return context.getContentResolver().delete(uri_goods, where, selectionArgs);
+    }
+
+    public static void updateGoods(Context context, int goodsID, String goodsName, int userID, int houseID, int roomID, int furnitureID, int categoryID, int containerID, int goodsNum, byte[] goodsPhoto1, byte[] goodsPhoto2, byte[] goodsPhoto3, String buyTime, String manufactureDate, String qualityGuaranteePeriod, String qualityGuaranteePeriodType, String overtime, boolean isOvertime, boolean isCloseOvertime, boolean packed, String remark) {
+        ContentValues goods = new ContentValues();
+        goods.put("goodsName", goodsName);
+        goods.put("userID", userID);
+        goods.put("houseID", houseID);
+        goods.put("roomID", roomID);
+        goods.put("furnitureID", furnitureID);
+        goods.put("categoryID", categoryID);
+        goods.put("containerID", containerID);
+        goods.put("goodsNum", goodsNum);
+        goods.put("goodsPhoto1", goodsPhoto1);
+        goods.put("goodsPhoto2", goodsPhoto2);
+        goods.put("goodsPhoto3", goodsPhoto3);
+        goods.put("buyTime", buyTime);
+        goods.put("manufactureDate", manufactureDate);
+        goods.put("qualityGuaranteePeriod", qualityGuaranteePeriod);
+        goods.put("qualityGuaranteePeriodType", qualityGuaranteePeriodType);
+        goods.put("overtime", overtime);
+        goods.put("isCloseOvertime", isCloseOvertime);
+        goods.put("isOvertime", isOvertime);
+        goods.put("packed", packed);
+        goods.put("remark", remark);
+        context.getContentResolver().update(uri_goods, goods, "goodsID=?", new String[]{String.valueOf(goodsID)});
+    }
+
+    public static void updateGoods(Context context, int goodsID, String manufactureDate, String qualityGuaranteePeriod, String qualityGuaranteePeriodType, String overtime, boolean isOvertime, boolean isCloseOvertime) {
+        ContentValues goods = new ContentValues();
+        goods.put("manufactureDate", manufactureDate);
+        goods.put("qualityGuaranteePeriod", qualityGuaranteePeriod);
+        goods.put("qualityGuaranteePeriodType", qualityGuaranteePeriodType);
+        goods.put("overtime", overtime);
+        goods.put("isCloseOvertime", isCloseOvertime);
+        goods.put("isOvertime", isOvertime);
+        context.getContentResolver().update(uri_goods, goods, "goodsID=?", new String[]{String.valueOf(goodsID)});
     }
 }

@@ -35,10 +35,27 @@ import androidx.core.content.FileProvider;
 import java.io.File;
 import java.io.FileOutputStream;
 
-import static edu.hebut.here.data.MyContentResolver.*;
-import edu.hebut.here.utils.*;
+import edu.hebut.here.utils.JudgeUtils;
+
+import static edu.hebut.here.data.MyContentResolver.createAccount;
+import static edu.hebut.here.data.MyContentResolver.createCategory;
+import static edu.hebut.here.data.MyContentResolver.createContainer;
+import static edu.hebut.here.data.MyContentResolver.createFurniture;
+import static edu.hebut.here.data.MyContentResolver.createHouse;
+import static edu.hebut.here.data.MyContentResolver.createRoom;
+import static edu.hebut.here.data.MyContentResolver.createUser;
+import static edu.hebut.here.data.MyContentResolver.queryHouse;
+import static edu.hebut.here.data.MyContentResolver.queryRoom;
+import static edu.hebut.here.data.MyContentResolver.queryUser;
+import static edu.hebut.here.data.MyContentResolver.uri_user;
+import static edu.hebut.here.utils.BitmapUtils.bitmapToByteArray;
 
 public class SignActivity extends AppCompatActivity {
+    private static final int REQUEST_IMAGE_GET = 0;
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int REQUEST_SMALL_IMAGE_CUTTING = 2;
+    private static final int REQUEST_BIG_IMAGE_CUTTING = 3;
+    private static final String IMAGE_FILE_NAME = "icon.jpg";
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
     ImageView signProfilePhoto;
@@ -46,34 +63,26 @@ public class SignActivity extends AppCompatActivity {
     TextView signPassword;
     TextView signRePassword;
     RadioGroup signGender;
-
     TextView tipSignUsername;
     TextView tipSignPassword;
     TextView tipSignRePassword;
     TextView tipSignGender;
-
     Button sign;
     TextView log;
-    String[] accountName={"宽带","电表","水表","燃气","有线电视","加油卡"};
-    String[] roomName={"客厅","主卧","次卧","厨房","卫生间"};
-    String[] furnitureName1={"茶几","电视柜"};
-    String[] furnitureName2={"床头柜","衣柜"};
-    String[] furnitureName3={"床头柜","衣柜"};
-    String[] furnitureName4={"橱柜1","橱柜2"};
-    String[] furnitureName5={"洗手台","置物架"};
-    String[] categoryName={"男装","饰品","女装","鞋靴","内衣","饰品","母婴","电器","数码","百货","运动","车品","医药","生鲜"};
-    String[] containerName={"行李箱","背包"};
+    String[] accountName = {"宽带", "电表", "水表", "燃气", "有线电视", "加油卡"};
+    String[] roomName = {"客厅", "主卧", "次卧", "厨房", "卫生间"};
+    String[] furnitureName1 = {"茶几", "电视柜"};
+    String[] furnitureName2 = {"床头柜", "衣柜"};
+    String[] furnitureName3 = {"床头柜", "衣柜"};
+    String[] furnitureName4 = {"橱柜1", "橱柜2"};
+    String[] furnitureName5 = {"洗手台", "置物架"};
+    String[] categoryName = {"男装", "饰品", "女装", "鞋靴", "内衣", "饰品", "母婴", "电器", "数码", "百货", "运动", "车品", "医药", "生鲜"};
+    String[] containerName = {"行李箱", "背包"};
     String username = null;
     String password = null;
     byte[] profilePhoto;
     String gender = null;
     Dialog dialog;
-    private static final int REQUEST_IMAGE_GET = 0;
-    private static final int REQUEST_IMAGE_CAPTURE = 1;
-    private static final int REQUEST_SMALL_IMAGE_CUTTING = 2;
-    private static final int REQUEST_BIG_IMAGE_CUTTING = 3;
-    private static final String IMAGE_FILE_NAME = "icon.jpg";
-
     private Uri mImageUri;
 
     @Override
@@ -96,7 +105,7 @@ public class SignActivity extends AppCompatActivity {
         tipSignRePassword = findViewById(R.id.tip_sign_repassword);
         tipSignGender = findViewById(R.id.tip_sign_gender);
 
-        sharedPreferences= getSharedPreferences("here", Context.MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences("here", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
 
         signGender.setOnCheckedChangeListener(((group, checkedId) -> {
@@ -107,40 +116,34 @@ public class SignActivity extends AppCompatActivity {
         sign.setOnClickListener(view -> {
             if (JudgeUtils.judgeExist(getApplicationContext(), uri_user, null, "username=?", new String[]{signUsername.getText().toString()}, null)) {
                 tipSignUsername.setText("已存在该用户");
-            }
-            else {
+            } else {
                 tipSignUsername.setText("");
                 if (!JudgeUtils.judgeUsername(signUsername.getText().toString())) {
                     tipSignUsername.setText("用户名格式错误");
-                }
-                else {
+                } else {
                     tipSignUsername.setText("");
                     if (!JudgeUtils.judgePassword(signPassword.getText().toString())) {
                         tipSignPassword.setText("密码格式错误");
-                    }
-                    else if(!JudgeUtils.judgePassword(signRePassword.getText().toString())){
+                    } else if (!JudgeUtils.judgePassword(signRePassword.getText().toString())) {
                         tipSignPassword.setText("");
                         tipSignRePassword.setText("密码格式错误");
-                    }
-                    else if(!signRePassword.getText().toString().equals(signPassword.getText().toString())){
+                    } else if (!signRePassword.getText().toString().equals(signPassword.getText().toString())) {
                         tipSignPassword.setText("");
                         tipSignRePassword.setText("两次密码不一致");
-                    }
-                    else if(gender==null){
+                    } else if (gender == null) {
                         tipSignRePassword.setText("");
                         tipSignGender.setText("请选择性别");
-                    }
-                    else {
+                    } else {
                         tipSignRePassword.setText("");
                         signProfilePhoto.setDrawingCacheEnabled(true);
                         Bitmap bitmap = signProfilePhoto.getDrawingCache();
-                        profilePhoto = BitmapUtils.bitmapToByteArray(bitmap);
+                        profilePhoto = bitmapToByteArray(bitmap);
                         signProfilePhoto.setDrawingCacheEnabled(false);
                         username = signUsername.getText().toString();
                         password = signRePassword.getText().toString();
                         //建用户
                         createUser(getApplicationContext(), username, password, gender, profilePhoto, 3);
-                        Cursor userCursor = queryUser(getApplicationContext(), new String[]{"_id"}, "username=?", new String[]{username});
+                        Cursor userCursor = queryUser(getApplicationContext(), new String[]{"userID"}, "username=?", new String[]{username});
                         int userID = -1;
                         while (userCursor.moveToNext()) {
                             userID = userCursor.getInt(0);
@@ -148,7 +151,7 @@ public class SignActivity extends AppCompatActivity {
                         //建住所
                         String houseName = username + "的家";
                         createHouse(getApplicationContext(), houseName, userID);
-                        Cursor houseCursor = queryHouse(getApplicationContext(), new String[]{"_id"}, "userID=?", new String[]{String.valueOf(userID)});
+                        Cursor houseCursor = queryHouse(getApplicationContext(), new String[]{"houseID"}, "userID=?", new String[]{String.valueOf(userID)});
                         int houseID = -1;
                         while (houseCursor.moveToNext()) {
                             houseID = houseCursor.getInt(0);
@@ -160,51 +163,52 @@ public class SignActivity extends AppCompatActivity {
                         }
                         //建房间
                         for (String room : roomName) {
-                            createRoom(getApplicationContext(), room, houseID);
+                            createRoom(getApplicationContext(), room, houseID, userID);
                         }
                         //建家具
-                        Cursor roomCursor = queryRoom(getApplicationContext(), new String[]{"_id"}, "roomName=? AND houseID=?", new String[]{"客厅", String.valueOf(houseID)});
+                        Cursor roomCursor = queryRoom(getApplicationContext(), new String[]{"roomID"}, "roomName=? AND houseID=?", new String[]{"客厅", String.valueOf(houseID)}, null);
                         int roomID = -1;
                         while (roomCursor.moveToNext()) {
                             roomID = roomCursor.getInt(0);
                         }
-                        for (String furniture : furnitureName1){
-                            createFurniture(getApplicationContext(), furniture, roomID);
+
+                        for (String furniture : furnitureName1) {
+                            createFurniture(getApplicationContext(), furniture, userID, houseID, roomID);
                         }
-                        roomCursor = queryRoom(getApplicationContext(), new String[]{"_id"}, "roomName=? AND houseID=?", new String[]{"主卧", String.valueOf(houseID)});
+                        roomCursor = queryRoom(getApplicationContext(), new String[]{"roomID"}, "roomName=? AND houseID=?", new String[]{"主卧", String.valueOf(houseID)}, null);
                         while (roomCursor.moveToNext()) {
                             roomID = roomCursor.getInt(0);
                         }
-                        for (String furniture : furnitureName2){
-                            createFurniture(getApplicationContext(), furniture, roomID);
+                        for (String furniture : furnitureName2) {
+                            createFurniture(getApplicationContext(), furniture, userID, houseID, roomID);
                         }
-                        roomCursor = queryRoom(getApplicationContext(), new String[]{"_id"}, "roomName=? AND houseID=?", new String[]{"次卧", String.valueOf(houseID)});
+                        roomCursor = queryRoom(getApplicationContext(), new String[]{"roomID"}, "roomName=? AND houseID=?", new String[]{"次卧", String.valueOf(houseID)}, null);
                         while (roomCursor.moveToNext()) {
                             roomID = roomCursor.getInt(0);
                         }
-                        for (String furniture : furnitureName3){
-                            createFurniture(getApplicationContext(), furniture, roomID);
+                        for (String furniture : furnitureName3) {
+                            createFurniture(getApplicationContext(), furniture, userID, houseID, roomID);
                         }
-                        roomCursor = queryRoom(getApplicationContext(), new String[]{"_id"}, "roomName=? AND houseID=?", new String[]{"厨房", String.valueOf(houseID)});
+                        roomCursor = queryRoom(getApplicationContext(), new String[]{"roomID"}, "roomName=? AND houseID=?", new String[]{"厨房", String.valueOf(houseID)}, null);
                         while (roomCursor.moveToNext()) {
                             roomID = roomCursor.getInt(0);
                         }
-                        for (String furniture : furnitureName4){
-                            createFurniture(getApplicationContext(), furniture, roomID);
+                        for (String furniture : furnitureName4) {
+                            createFurniture(getApplicationContext(), furniture, userID, houseID, roomID);
                         }
-                        roomCursor = queryRoom(getApplicationContext(), new String[]{"_id"}, "roomName=? AND houseID=?", new String[]{"卫生间", String.valueOf(houseID)});
+                        roomCursor = queryRoom(getApplicationContext(), new String[]{"roomID"}, "roomName=? AND houseID=?", new String[]{"卫生间", String.valueOf(houseID)}, null);
                         while (roomCursor.moveToNext()) {
                             roomID = roomCursor.getInt(0);
                         }
-                        for (String furniture : furnitureName5){
-                            createFurniture(getApplicationContext(), furniture, roomID);
+                        for (String furniture : furnitureName5) {
+                            createFurniture(getApplicationContext(), furniture, userID, houseID, roomID);
                         }
                         //建分类
-                        for (String category : categoryName){
+                        for (String category : categoryName) {
                             createCategory(getApplicationContext(), category, userID);
                         }
                         //建容器
-                        for (String container : containerName){
+                        for (String container : containerName) {
                             createContainer(getApplicationContext(), container, userID);
                         }
 
@@ -227,6 +231,7 @@ public class SignActivity extends AppCompatActivity {
             edu.hebut.here.SignActivity.this.finish();
         });
     }
+
     private void showDialog() {
         View view = getLayoutInflater().inflate(R.layout.photo_choose_dialog, null);
         dialog = new Dialog(this, R.style.transparentFrameWindowStyle);
@@ -289,6 +294,7 @@ public class SignActivity extends AppCompatActivity {
         });
         btn_cancel.setOnClickListener(v -> dialog.dismiss());
     }
+
     /**
      * 处理回调结果
      */
@@ -476,9 +482,9 @@ public class SignActivity extends AppCompatActivity {
         String filePath = imageFile.getAbsolutePath();
         Cursor cursor = context.getContentResolver().query(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                new String[] { MediaStore.Images.Media._ID },
+                new String[]{MediaStore.Images.Media._ID},
                 MediaStore.Images.Media.DATA + "=? ",
-                new String[] { filePath }, null);
+                new String[]{filePath}, null);
 
         if (cursor != null && cursor.moveToFirst()) {
             int id = cursor.getInt(cursor

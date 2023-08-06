@@ -17,15 +17,25 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     @Override
+    public void onOpen(SQLiteDatabase db) {
+        // TODO Auto-generated method stub
+        super.onOpen(db);
+        if (!db.isReadOnly()) {
+            // Enable foreign key constraints 开启外键约束
+            db.execSQL("PRAGMA foreign_keys=ON;");
+        }
+    }
+
+    @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE IF NOT EXISTS user( _id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT NOT NULL, password TEXT NOT NULL, gender TEXT NOT NULL, profilePhoto MEDIUMBLOB NOT NULL, reminderTime int NOT NULL )");
-        db.execSQL("CREATE TABLE IF NOT EXISTS house( _id INTEGER PRIMARY KEY AUTOINCREMENT, houseName TEXT NOT NULL, userID INTEGER NOT NULL, FOREIGN KEY (userID) REFERENCES user (_id) )");
-        db.execSQL("CREATE TABLE IF NOT EXISTS account( _id INTEGER PRIMARY KEY AUTOINCREMENT, accountName TEXT NOT NULL,accountValue TEXT NOT NULL, houseID INTEGER NOT NULL, FOREIGN KEY (houseID) REFERENCES house (_id) )");
-        db.execSQL("CREATE TABLE IF NOT EXISTS room( _id INTEGER PRIMARY KEY AUTOINCREMENT, roomName TEXT NOT NULL, houseID INTEGER NOT NULL, FOREIGN KEY (houseID) REFERENCES house (_id) )");
-        db.execSQL("CREATE TABLE IF NOT EXISTS furniture( _id INTEGER PRIMARY KEY AUTOINCREMENT, furnitureName TEXT NOT NULL, roomID INTEGER NOT NULL, FOREIGN KEY (roomID) REFERENCES room (_id) )");
-        db.execSQL("CREATE TABLE IF NOT EXISTS container( _id INTEGER PRIMARY KEY AUTOINCREMENT, containerName TEXT NOT NULL, userID INTEGER NOT NULL, FOREIGN KEY (userID) REFERENCES user (_id))");
-        db.execSQL("CREATE TABLE IF NOT EXISTS category( _id INTEGER PRIMARY KEY AUTOINCREMENT, categoryName TEXT NOT NULL, userID INTEGER NOT NULL, FOREIGN KEY (userID) REFERENCES user (_id))");
-        db.execSQL("CREATE TABLE IF NOT EXISTS goods( _id INTEGER PRIMARY KEY AUTOINCREMENT, goodsName TEXT NOT NULL, userID INTEGER NOT NULL, houseID INTEGER NOT NULL, roomID INTEGER NOT NULL, furnitureID INTEGER NOT NULL, categoryID INTEGER NOT NULL, containerID INTEGER, goodsNum INTEGER, goodsPhoto1 MEDIUMBLOB, goodsPhoto2 MEDIUMBLOB, goodsPhoto3 MEDIUMBLOB, buyTime TEXT, manufactureDate TEXT, qualityGuaranteePeriod INTEGER ,qualityGuaranteePeriodType TEXT,  overtime TEXT, isOvertime BOOLEAN NOT NULL, isCloseOvertime BOOLEAN NOT NULL, packed BOOLEAN NOT NULL, remark TEXT, FOREIGN KEY (userID) REFERENCES user (_id), FOREIGN KEY (houseID) REFERENCES house (_id), FOREIGN KEY (roomID) REFERENCES room (_id), FOREIGN KEY (furnitureID) REFERENCES furniture (_id), FOREIGN KEY (categoryID) REFERENCES category (_id), FOREIGN KEY (containerID) REFERENCES container (_id) )");
+        db.execSQL("CREATE TABLE IF NOT EXISTS user( userID INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT NOT NULL, password TEXT NOT NULL, gender TEXT NOT NULL, profilePhoto MEDIUMBLOB NOT NULL, reminderTime int NOT NULL )");
+        db.execSQL("CREATE TABLE IF NOT EXISTS house( houseID INTEGER PRIMARY KEY AUTOINCREMENT, houseName TEXT NOT NULL, userID INTEGER NOT NULL, FOREIGN KEY (userID) REFERENCES user (userID) ON DELETE CASCADE )");
+        db.execSQL("CREATE TABLE IF NOT EXISTS account( accountID INTEGER PRIMARY KEY AUTOINCREMENT, accountName TEXT NOT NULL,accountValue TEXT NOT NULL, houseID INTEGER NOT NULL, FOREIGN KEY (houseID) REFERENCES house (houseID) ON DELETE CASCADE )");
+        db.execSQL("CREATE TABLE IF NOT EXISTS room( roomID INTEGER PRIMARY KEY AUTOINCREMENT, roomName TEXT NOT NULL, userID INTEGER NOT NULL, houseID INTEGER NOT NULL, FOREIGN KEY (userID) REFERENCES user (userID) ON DELETE CASCADE, FOREIGN KEY (houseID) REFERENCES house (houseID) ON DELETE CASCADE )");
+        db.execSQL("CREATE TABLE IF NOT EXISTS furniture( furnitureID INTEGER PRIMARY KEY AUTOINCREMENT, furnitureName TEXT NOT NULL, userID INTEGER NOT NULL, houseID INTEGER NOT NULL, roomID INTEGER NOT NULL, FOREIGN KEY (userID) REFERENCES user (userID) ON DELETE CASCADE, FOREIGN KEY (houseID) REFERENCES house (houseID) ON DELETE CASCADE, FOREIGN KEY (roomID) REFERENCES room (roomID) ON DELETE CASCADE )");
+        db.execSQL("CREATE TABLE IF NOT EXISTS container( containerID INTEGER PRIMARY KEY AUTOINCREMENT, containerName TEXT NOT NULL, userID INTEGER NOT NULL, FOREIGN KEY (userID) REFERENCES user (userID))");
+        db.execSQL("CREATE TABLE IF NOT EXISTS category( categoryID INTEGER PRIMARY KEY AUTOINCREMENT, categoryName TEXT NOT NULL, userID INTEGER NOT NULL, FOREIGN KEY (userID) REFERENCES user (userID))");
+        db.execSQL("CREATE TABLE IF NOT EXISTS goods( goodsID INTEGER PRIMARY KEY AUTOINCREMENT, goodsName TEXT NOT NULL, userID INTEGER NOT NULL, houseID INTEGER NOT NULL, roomID INTEGER NOT NULL, furnitureID INTEGER NOT NULL, categoryID INTEGER NOT NULL, containerID INTEGER, goodsNum INTEGER, goodsPhoto1 MEDIUMBLOB, goodsPhoto2 MEDIUMBLOB, goodsPhoto3 MEDIUMBLOB, buyTime TEXT, manufactureDate TEXT, qualityGuaranteePeriod INTEGER ,qualityGuaranteePeriodType TEXT,  overtime TEXT, isOvertime BOOLEAN NOT NULL, isCloseOvertime BOOLEAN NOT NULL, packed BOOLEAN NOT NULL, remark TEXT, FOREIGN KEY (userID) REFERENCES user (userID) ON DELETE CASCADE, FOREIGN KEY (houseID) REFERENCES house (houseID) ON DELETE CASCADE, FOREIGN KEY (roomID) REFERENCES room (roomID) ON DELETE CASCADE, FOREIGN KEY (furnitureID) REFERENCES furniture (furnitureID) ON DELETE CASCADE, FOREIGN KEY (categoryID) REFERENCES category (categoryID) ON DELETE CASCADE )");
     }
 
     @Override

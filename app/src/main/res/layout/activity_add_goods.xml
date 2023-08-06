@@ -12,6 +12,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingBottom="16dp"
         android:orientation="vertical">
         <Toolbar
             android:id="@+id/tool_bar"
@@ -41,7 +42,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/textView12"
+                    android:id="@+id/add_goods_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="添加物品"
@@ -124,12 +125,12 @@
 
             <EditText
                 android:id="@+id/add_goods_goodsName"
-                android:layout_width="300dp"
+                android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:gravity="right|center_vertical"
+                android:inputType="text"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/add_goods_label_goodsName"
                 app:layout_constraintTop_toBottomOf="@+id/add_goods_goodsPhoto1" />
 
@@ -150,10 +151,10 @@
                 app:layout_constraintBottom_toTopOf="@+id/add_goods_roomName"
                 app:layout_constraintStart_toStartOf="@+id/add_goods_roomName" />
 
-            <EditText
+            <Spinner
                 android:id="@+id/add_goods_roomName"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
+                android:layout_width="250dp"
+                android:layout_height="45dp"
                 android:layout_marginTop="24dp"
                 android:gravity="right|center_vertical"
                 app:layout_constraintStart_toStartOf="@+id/add_goods_goodsName"
@@ -176,10 +177,10 @@
                 app:layout_constraintBottom_toTopOf="@+id/add_goods_furnitureName"
                 app:layout_constraintStart_toStartOf="@+id/add_goods_furnitureName" />
 
-            <EditText
+            <Spinner
                 android:id="@+id/add_goods_furnitureName"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
+                android:layout_width="250dp"
+                android:layout_height="45dp"
                 android:layout_marginTop="24dp"
                 android:gravity="right|center_vertical"
                 app:layout_constraintStart_toStartOf="@+id/add_goods_roomName"
@@ -202,10 +203,10 @@
                 app:layout_constraintBottom_toTopOf="@+id/add_goods_categoryName"
                 app:layout_constraintStart_toStartOf="@+id/add_goods_categoryName" />
 
-            <EditText
+            <Spinner
                 android:id="@+id/add_goods_categoryName"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
+                android:layout_width="250dp"
+                android:layout_height="45dp"
                 android:layout_marginTop="24dp"
                 android:gravity="right|center_vertical"
                 app:layout_constraintStart_toStartOf="@+id/add_goods_furnitureName"
@@ -236,15 +237,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toTopOf="@+id/add_goods_containerName"
-                app:layout_constraintStart_toStartOf="@+id/add_goods_containerName" />
+                app:layout_constraintStart_toStartOf="@+id/add_goods_packed" />
 
-            <EditText
+            <Spinner
                 android:id="@+id/add_goods_containerName"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
+                android:layout_width="180dp"
+                android:layout_height="45dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="24dp"
                 android:gravity="right|center_vertical"
-                app:layout_constraintStart_toStartOf="@+id/add_goods_categoryName"
+                app:layout_constraintStart_toEndOf="@+id/add_goods_packed"
                 app:layout_constraintTop_toBottomOf="@+id/add_goods_categoryName" />
 
             <TextView
@@ -266,11 +268,12 @@
 
             <EditText
                 android:id="@+id/add_goods_goodsNum"
-                android:layout_width="300dp"
+                android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:gravity="right|center_vertical"
-                app:layout_constraintStart_toStartOf="@+id/add_goods_containerName"
+                android:inputType="number"
+                app:layout_constraintStart_toStartOf="@+id/add_goods_packed"
                 app:layout_constraintTop_toBottomOf="@+id/add_goods_containerName" />
 
             <TextView
@@ -292,7 +295,7 @@
 
             <TextView
                 android:id="@+id/add_goods_buyTime"
-                android:layout_width="300dp"
+                android:layout_width="250dp"
                 android:layout_height="45dp"
                 android:layout_marginTop="24dp"
                 android:gravity="right|center_vertical"
@@ -320,7 +323,7 @@
 
             <TextView
                 android:id="@+id/add_goods_manufactureDate"
-                android:layout_width="300dp"
+                android:layout_width="250dp"
                 android:layout_height="45dp"
                 android:layout_marginTop="24dp"
                 android:gravity="right|center_vertical"
@@ -358,10 +361,11 @@
 
             <EditText
                 android:id="@+id/add_goods_qualityGuaranteePeriod"
-                android:layout_width="220dp"
+                android:layout_width="170dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:gravity="right|center_vertical"
+                android:inputType="number"
                 app:layout_constraintStart_toStartOf="@+id/add_goods_manufactureDate"
                 app:layout_constraintTop_toBottomOf="@+id/add_goods_manufactureDate" />
 
@@ -395,12 +399,22 @@
 
             <EditText
                 android:id="@+id/add_goods_remark"
-                android:layout_width="300dp"
+                android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:gravity="right|center_vertical"
+                android:inputType="text"
                 app:layout_constraintStart_toStartOf="@+id/add_goods_qualityGuaranteePeriod"
                 app:layout_constraintTop_toBottomOf="@+id/add_goods_qualityGuaranteePeriod" />
+
+            <Switch
+                android:id="@+id/add_goods_packed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="关"
+                app:layout_constraintBottom_toBottomOf="@+id/add_goods_containerName"
+                app:layout_constraintStart_toStartOf="@+id/add_goods_categoryName"
+                app:layout_constraintTop_toTopOf="@+id/add_goods_containerName" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>

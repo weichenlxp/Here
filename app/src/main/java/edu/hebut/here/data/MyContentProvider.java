@@ -8,12 +8,8 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import android.util.Log;
 
 public class MyContentProvider extends ContentProvider {
-    private Context mContext;
-    DBHelper mDbHelper = null;
-    SQLiteDatabase db = null;
     public static final String authorities = "edu.hebut.here.data";
     private static final int User = 1;
     private static final int House = 2;
@@ -24,7 +20,8 @@ public class MyContentProvider extends ContentProvider {
     private static final int Category = 7;
     private static final int Goods = 8;
     private static final UriMatcher matcher;
-    static{
+
+    static {
         matcher = new UriMatcher(UriMatcher.NO_MATCH);
         matcher.addURI(authorities, "user", User);
         matcher.addURI(authorities, "house", House);
@@ -35,6 +32,10 @@ public class MyContentProvider extends ContentProvider {
         matcher.addURI(authorities, "category", Category);
         matcher.addURI(authorities, "goods", Goods);
     }
+
+    DBHelper mDbHelper = null;
+    SQLiteDatabase db = null;
+    private Context mContext;
 
     @Override
     public boolean onCreate() {
@@ -48,9 +49,6 @@ public class MyContentProvider extends ContentProvider {
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-
-        Log.e("aaa", uri.toString()+getTableName(uri));
-
         long id = db.insert(getTableName(uri), null, values);
         mContext.getContentResolver().notifyChange(uri, null);
         return ContentUris.withAppendedId(uri, id);
@@ -76,7 +74,7 @@ public class MyContentProvider extends ContentProvider {
         return null;
     }
 
-    private String getTableName(Uri uri){
+    private String getTableName(Uri uri) {
         String tableName = null;
         switch (matcher.match(uri)) {
             case User:

@@ -6,21 +6,24 @@ import android.os.Handler;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import edu.hebut.here.service.LongRunningService;
+
 public class WelcomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.welcome);
+        setContentView(R.layout.activity_welcome);
+
+        Intent service = new Intent(this, LongRunningService.class);
+        startService(service);
+
         /**
          * 延迟3秒进入主界面
          */
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent(edu.hebut.here.WelcomeActivity.this, edu.hebut.here.LoginActivity.class);
-                startActivity(intent);
-                edu.hebut.here.WelcomeActivity.this.finish();
-            }
+        new Handler().postDelayed(() -> {
+            Intent intent = new Intent(WelcomeActivity.this, LoginActivity.class);
+            startActivity(intent);
+            WelcomeActivity.this.finish();
         }, 1500);
     }
 }

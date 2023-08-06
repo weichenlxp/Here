@@ -7,8 +7,10 @@
     <color name="teal_700">#BF9E30</color>
     <color name="black">#FF000000</color>
     <color name="white">#DBEEF2</color>
+    <color name="whiter">#FFFFFF</color>
     <color name="lighter">#FFB3CDE0</color>
     <color name="light">#FF6497B1</color>
     <color name="deep">#FF005b96</color>
     <color name="deeper">#FF011f4b</color>
+    <color name="ic_launcher_background">#DBEEF2</color>
 </resources>

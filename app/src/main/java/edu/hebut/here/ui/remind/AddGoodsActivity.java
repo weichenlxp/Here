@@ -22,9 +22,12 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,31 +42,18 @@ import java.io.FileOutputStream;
 import java.util.Calendar;
 import java.util.Date;
 
-import edu.hebut.here.MainActivity;
 import edu.hebut.here.R;
-import static edu.hebut.here.data.MyContentResolver.*;
-import edu.hebut.here.utils.*;
+import edu.hebut.here.utils.BitmapUtils;
+import edu.hebut.here.utils.DateUtils;
+
+import static edu.hebut.here.data.MyContentResolver.createGoods;
+import static edu.hebut.here.data.MyContentResolver.queryCategory;
+import static edu.hebut.here.data.MyContentResolver.queryContainer;
+import static edu.hebut.here.data.MyContentResolver.queryFurniture;
+import static edu.hebut.here.data.MyContentResolver.queryRoom;
+import static edu.hebut.here.data.MyContentResolver.queryUser;
 
 public class AddGoodsActivity extends AppCompatActivity {
-    SharedPreferences sharedPreferences;
-    EditText addGoodsGoodsName;
-    EditText addGoodsRoomName;
-    EditText addGoodsFurnitureName;
-    EditText addGoodsCategoryName;
-    EditText addGoodsGoodsNum;
-    ImageView addGoodsGoodsPhoto1;
-    ImageView addGoodsGoodsPhoto2;
-    ImageView addGoodsGoodsPhoto3;
-    TextView addGoodsBuyTime;
-    TextView addGoodsManufactureDate;
-    EditText addGoodsQualityGuaranteePeriod;
-    Spinner addGoodsQualityGuaranteePeriodType;
-    EditText addGoodsRemark;
-    TextView save;
-    TextView cancel;
-    String qualityGuaranteePeriodType=null;
-
-    Dialog dialog;
     private static final int REQUEST_IMAGE_GET1 = 0;
     private static final int REQUEST_IMAGE_GET2 = 1;
     private static final int REQUEST_IMAGE_GET3 = 2;
@@ -77,21 +67,63 @@ public class AddGoodsActivity extends AppCompatActivity {
     private static final int REQUEST_BIG_IMAGE_CUTTING2 = 10;
     private static final int REQUEST_BIG_IMAGE_CUTTING3 = 11;
     private static final String IMAGE_FILE_NAME = "icon.jpg";
-
+    SharedPreferences sharedPreferences;
+    TextView cancel;
+    TextView save;
+    ImageView addGoodsGoodsPhoto1;
+    ImageView addGoodsGoodsPhoto2;
+    ImageView addGoodsGoodsPhoto3;
+    EditText addGoodsGoodsName;
+    Spinner addGoodsRoomName;
+    Spinner addGoodsFurnitureName;
+    Spinner addGoodsCategoryName;
+    ImageView addGoodsContainerLabel;
+    Switch addGoodsPacked;
+    Spinner addGoodsContainerName;
+    EditText addGoodsGoodsNum;
+    TextView addGoodsBuyTime;
+    TextView addGoodsManufactureDate;
+    EditText addGoodsQualityGuaranteePeriod;
+    Spinner addGoodsQualityGuaranteePeriodType;
+    EditText addGoodsRemark;
+    String[] roomNameList;
+    String[] furnitureNameList;
+    String[] categoryNameList;
+    String[] containerNameList;
+    String goodsName;
+    String roomName;
+    int roomID = -1;
+    String furnitureName;
+    int furnitureID = -1;
+    String categoryName;
+    int categoryID = -1;
+    String containerName;
+    int containerID = -1;
+    String buyTime;
+    String manufactureDate;
+    String qualityGuaranteePeriod;
+    String qualityGuaranteePeriodType = "天";
+    String remark;
+    Dialog dialog;
     private Uri mImageUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_goods);
-        addGoodsGoodsName = findViewById(R.id.add_goods_goodsName);
-        addGoodsRoomName = findViewById(R.id.add_goods_roomName);
-        addGoodsFurnitureName = findViewById(R.id.add_goods_furnitureName);
-        addGoodsCategoryName = findViewById(R.id.add_goods_categoryName);
-        addGoodsGoodsNum = findViewById(R.id.add_goods_goodsNum);
         addGoodsGoodsPhoto1 = findViewById(R.id.add_goods_goodsPhoto1);
         addGoodsGoodsPhoto2 = findViewById(R.id.add_goods_goodsPhoto2);
         addGoodsGoodsPhoto3 = findViewById(R.id.add_goods_goodsPhoto3);
+        addGoodsGoodsName = findViewById(R.id.add_goods_goodsName);
+        addGoodsRoomName = findViewById(R.id.add_goods_roomName);
+        addGoodsFurnitureName = findViewById(R.id.add_goods_furnitureName);
+        addGoodsFurnitureName.setEnabled(false);
+        addGoodsCategoryName = findViewById(R.id.add_goods_categoryName);
+        addGoodsContainerLabel = findViewById(R.id.add_goods_img_tip_containerName);
+        addGoodsPacked = findViewById(R.id.add_goods_packed);
+        addGoodsContainerName = findViewById(R.id.add_goods_containerName);
+        addGoodsGoodsNum = findViewById(R.id.add_goods_goodsNum);
+
         addGoodsGoodsPhoto1.setOnClickListener(v -> {
             showDialog("1");
         });
@@ -102,18 +134,130 @@ public class AddGoodsActivity extends AppCompatActivity {
             showDialog("3");
         });
 
+        sharedPreferences = getSharedPreferences("here", Context.MODE_PRIVATE);
+        int userID = sharedPreferences.getInt("userID", -1);
+        int houseID = sharedPreferences.getInt("houseID", -1);
+        Cursor room = queryRoom(this, new String[]{"roomID", "roomName"}, "userID=? AND houseID=?", new String[]{String.valueOf(userID), String.valueOf(houseID)}, null);
+        String[] tempRoomName = new String[room.getCount()];
+        int[] tempRoomID = new int[room.getCount()];
+        for (int i = 0; room.moveToNext(); i++) {
+            tempRoomID[i] = room.getInt(0);
+            tempRoomName[i] = room.getString(1);
+        }
+        roomNameList = tempRoomName;
+        ArrayAdapter<String> roomNameAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, roomNameList);
+        roomNameAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        addGoodsRoomName.setAdapter(roomNameAdapter);
+        addGoodsRoomName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int pos, long id) {
+                roomName = roomNameList[pos];
+
+                Cursor furniture = queryFurniture(getApplicationContext(), new String[]{"furnitureName"}, "userID=? AND roomID=?", new String[]{String.valueOf(userID), String.valueOf(tempRoomID[pos])});
+                String[] tempFurnitureName = new String[furniture.getCount()];
+                for (int i = 0; furniture.moveToNext(); i++) {
+                    tempFurnitureName[i] = furniture.getString(0);
+                }
+                furnitureNameList = tempFurnitureName;
+                ArrayAdapter<String> furnitureNameAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, furnitureNameList);
+                furnitureNameAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                addGoodsFurnitureName.setAdapter(furnitureNameAdapter);
+                addGoodsFurnitureName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view,
+                                               int pos, long id) {
+                        furnitureName = furnitureNameList[pos];
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                        // Another interface callback
+                    }
+                });
+                addGoodsFurnitureName.setEnabled(true);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Another interface callback
+            }
+        });
+
+        Cursor category = queryCategory(getApplicationContext(), new String[]{"categoryName"}, "userID=?", new String[]{String.valueOf(userID)});
+        String[] tempCategoryName = new String[category.getCount()];
+        for (int i = 0; category.moveToNext(); i++) {
+            tempCategoryName[i] = category.getString(0);
+        }
+        categoryNameList = tempCategoryName;
+        ArrayAdapter<String> categoryNameAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, categoryNameList);
+        categoryNameAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        addGoodsCategoryName.setAdapter(categoryNameAdapter);
+        addGoodsCategoryName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int pos, long id) {
+                categoryName = categoryNameList[pos];
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Another interface callback
+            }
+        });
+
+        TextView textView = new TextView(this);
+        textView.setText("打包开关为开时，此物品会显示在“打包”中，而不显示在“空间”中");
+        final PopupWindow packTip = new PopupWindow(textView, 400, 400);//参数为1.View 2.宽度 3.高度
+        packTip.setOutsideTouchable(true);//设置点击外部区域可以取消popupWindow
+        addGoodsContainerName.setEnabled(false);
+        addGoodsContainerLabel.setOnClickListener(v -> {
+            packTip.showAsDropDown(addGoodsContainerLabel);//设置popupWindow显示,并且告诉它显示在那个View下面
+        });
+
+        addGoodsPacked.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            addGoodsContainerName.setEnabled(isChecked);
+            if (isChecked) {
+                addGoodsPacked.setText("开");
+            } else {
+                addGoodsPacked.setText("关");
+            }
+        });
+
+        Cursor container = queryContainer(getApplicationContext(), new String[]{"containerName"}, "userID=?", new String[]{String.valueOf(userID)});
+        String[] tempContainerName = new String[container.getCount()];
+        for (int i = 0; container.moveToNext(); i++) {
+            tempContainerName[i] = container.getString(0);
+        }
+        containerNameList = tempContainerName;
+        ArrayAdapter<String> containerNameAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, containerNameList);
+        containerNameAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        addGoodsContainerName.setAdapter(containerNameAdapter);
+        addGoodsContainerName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int pos, long id) {
+                containerName = containerNameList[pos];
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Another interface callback
+            }
+        });
+        addGoodsGoodsNum.setText("1");
         addGoodsBuyTime = findViewById(R.id.add_goods_buyTime);
         addGoodsBuyTime.setOnClickListener(v -> {
-            Calendar calendar= Calendar.getInstance();
-            new DatePickerDialog(AddGoodsActivity.this, (dp, year, month, dayOfMonth)->{
-                addGoodsBuyTime.setText(year+"-"+(month+1)+"-"+dayOfMonth);
+            Calendar calendar = Calendar.getInstance();
+            new DatePickerDialog(AddGoodsActivity.this, (dp, year, month, dayOfMonth) -> {
+                addGoodsBuyTime.setText(year + "-" + (month + 1) + "-" + dayOfMonth);
             }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
         });
         addGoodsManufactureDate = findViewById(R.id.add_goods_manufactureDate);
         addGoodsManufactureDate.setOnClickListener(v -> {
-            Calendar calendar= Calendar.getInstance();
-            new DatePickerDialog(AddGoodsActivity.this, (dp, year, month, dayOfMonth)->{
-                addGoodsManufactureDate.setText(year+"-"+(month+1)+"-"+dayOfMonth);
+            Calendar calendar = Calendar.getInstance();
+            new DatePickerDialog(AddGoodsActivity.this, (dp, year, month, dayOfMonth) -> {
+                addGoodsManufactureDate.setText(year + "-" + (month + 1) + "-" + dayOfMonth);
             }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
         });
 
@@ -123,10 +267,10 @@ public class AddGoodsActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int pos, long id) {
-
                 String[] SpinnerItem = getResources().getStringArray(R.array.SpinnerItem);
                 qualityGuaranteePeriodType = SpinnerItem[pos];
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 // Another interface callback
@@ -136,16 +280,10 @@ public class AddGoodsActivity extends AppCompatActivity {
         cancel = findViewById(R.id.add_goods_cancel);
         cancel.setOnClickListener(v -> {
             AddGoodsActivity.this.finish();
-            Intent intent=new Intent(AddGoodsActivity.this, edu.hebut.here.MainActivity.class);
-            intent.putExtra("is_back", "1");
-            startActivity(intent);
         });
         save = findViewById(R.id.add_goods_save);
         save.setOnClickListener(v -> {
-            String goodsName = addGoodsGoodsName.getText().toString();
-            String roomName = addGoodsRoomName.getText().toString();
-            String furnitureName = addGoodsFurnitureName.getText().toString();
-            String categoryName = addGoodsCategoryName.getText().toString();
+            goodsName = addGoodsGoodsName.getText().toString();
             String goodsNum = addGoodsGoodsNum.getText().toString();
 
             addGoodsGoodsPhoto1.setDrawingCacheEnabled(true);
@@ -163,55 +301,82 @@ public class AddGoodsActivity extends AppCompatActivity {
             byte[] goodsPhoto3 = BitmapUtils.bitmapToByteArray(bitmap3);
             addGoodsGoodsPhoto3.setDrawingCacheEnabled(false);
 
-            String buyTime = addGoodsBuyTime.getText().toString();
-            String manufactureDate = addGoodsManufactureDate.getText().toString();
-            String qualityGuaranteePeriod = addGoodsQualityGuaranteePeriod.getText().toString();
-            String remark = addGoodsRemark.getText().toString();
+            buyTime = addGoodsBuyTime.getText().toString();
+            manufactureDate = addGoodsManufactureDate.getText().toString();
+            qualityGuaranteePeriod = addGoodsQualityGuaranteePeriod.getText().toString();
+            remark = addGoodsRemark.getText().toString();
 
-            sharedPreferences= getSharedPreferences("here", Context.MODE_PRIVATE);
-            int userID = sharedPreferences.getInt("userID", -1);
-            int houseID = sharedPreferences.getInt("houseID", -1);
-            Cursor roomCursor = queryRoom(this, new String[]{"_id"}, "roomName=? AND houseID=?", new String[]{roomName, String.valueOf(houseID)});
-            int roomID = -1;
-            while (roomCursor.moveToNext()) {
-                roomID = roomCursor.getInt(0);
+            Date nowDate = new Date();
+            String now = DateUtils.date2Str(nowDate);
+            boolean flag1 = DateUtils.compare_date(buyTime, now) == -1;
+            boolean flag2 = DateUtils.compare_date(manufactureDate, now) == -1;
+            boolean flag3 = DateUtils.compare_date(manufactureDate, buyTime) == -1;
+
+            if (buyTime.equals("选择日期")) {
+                flag1 = true;
             }
-            Cursor furnitureCursor = queryFurniture(getApplicationContext(), new String[]{"_id"}, "furnitureName=? AND roomID=?", new String[]{furnitureName, String.valueOf(roomID)});
-            int furnitureID = -1;
-            while (furnitureCursor.moveToNext()) {
-                furnitureID = furnitureCursor.getInt(0);
+            if (manufactureDate.equals("选择日期")) {
+                flag2 = true;
             }
-            Cursor categoryCursor = queryCategory(getApplicationContext(), new String[]{"_id"}, "categoryName=? AND userID=?", new String[]{categoryName, String.valueOf(userID)});
-            int categoryID = -1;
-            while (categoryCursor.moveToNext()) {
-                categoryID = categoryCursor.getInt(0);
+            if (buyTime.equals("选择日期") && manufactureDate.equals("选择日期")) {
+                flag3 = true;
+            }
+            if (goodsName.equals("")) {
+                Toast.makeText(this, "物品名称不能为空，请重新输入！", Toast.LENGTH_SHORT).show();
+            } else if (!flag1) {
+                Toast.makeText(this, "购买日期不能晚于当前日期，请重新选择！", Toast.LENGTH_SHORT).show();
+            } else if (!flag2) {
+                Toast.makeText(this, "生产日期不能晚于当前日期，请重新选择！", Toast.LENGTH_SHORT).show();
+            } else if (!flag3) {
+                Toast.makeText(this, "生产日期不能晚于购买日期，请重新选择！", Toast.LENGTH_SHORT).show();
+            } else {
+                int reminderTime = -1;
+                Cursor userCursor = queryUser(this, new String[]{"reminderTime"}, "userID=?", new String[]{String.valueOf(userID)});
+                while (userCursor.moveToNext()) {
+                    reminderTime = userCursor.getInt(0);
+                }
+
+                Cursor roomCursor = queryRoom(this, new String[]{"roomID"}, "roomName=? AND houseID=?", new String[]{roomName, String.valueOf(houseID)}, null);
+                while (roomCursor.moveToNext()) {
+                    roomID = roomCursor.getInt(0);
+                }
+                Cursor furnitureCursor = queryFurniture(getApplicationContext(), new String[]{"furnitureID"}, "furnitureName=? AND roomID=?", new String[]{furnitureName, String.valueOf(roomID)});
+                while (furnitureCursor.moveToNext()) {
+                    furnitureID = furnitureCursor.getInt(0);
+                }
+                Cursor categoryCursor = queryCategory(getApplicationContext(), new String[]{"categoryID"}, "categoryName=? AND userID=?", new String[]{categoryName, String.valueOf(userID)});
+                while (categoryCursor.moveToNext()) {
+                    categoryID = categoryCursor.getInt(0);
+                }
+
+                if (addGoodsPacked.isChecked()) {
+                    Cursor containerCursor = queryContainer(getApplicationContext(), new String[]{"containerID"}, "containerName=? AND userID=?", new String[]{containerName, String.valueOf(userID)});
+                    while (containerCursor.moveToNext()) {
+                        containerID = containerCursor.getInt(0);
+                    }
+                } else {
+                    Cursor containerCursor = queryContainer(getApplicationContext(), new String[]{"containerID"}, "userID=?", new String[]{String.valueOf(userID)});
+                    if (containerCursor.moveToNext()) {
+                        containerID = containerCursor.getInt(0);
+                    }
+                }
+                if (qualityGuaranteePeriod.equals("") || manufactureDate.equals("选择日期")) {
+                    createGoods(getApplicationContext(), goodsName, userID, houseID, roomID, furnitureID, categoryID, containerID, Integer.parseInt(goodsNum), goodsPhoto1, goodsPhoto2, goodsPhoto3, buyTime, manufactureDate, null, qualityGuaranteePeriodType, null, false, false, addGoodsPacked.isChecked(), remark);
+                } else {
+                    Date productDate = DateUtils.string2Date(manufactureDate);
+                    Date overtimeDate = DateUtils.addValue(productDate, Integer.parseInt(qualityGuaranteePeriod), qualityGuaranteePeriodType);
+                    String overtime = DateUtils.date2Str(overtimeDate);
+                    int subDate = DateUtils.getDaysIntervalStr(now, overtime);
+                    if (subDate < 0) {
+                        createGoods(getApplicationContext(), goodsName, userID, houseID, roomID, furnitureID, categoryID, containerID, Integer.parseInt(goodsNum), goodsPhoto1, goodsPhoto2, goodsPhoto3, buyTime, manufactureDate, qualityGuaranteePeriod, qualityGuaranteePeriodType, "已过期" + (-subDate) + "天", true, false, addGoodsPacked.isChecked(), remark);
+                    } else
+                        createGoods(getApplicationContext(), goodsName, userID, houseID, roomID, furnitureID, categoryID, containerID, Integer.parseInt(goodsNum), goodsPhoto1, goodsPhoto2, goodsPhoto3, buyTime, manufactureDate, qualityGuaranteePeriod, qualityGuaranteePeriodType, "还有" + subDate + "天过期", false, subDate <= reminderTime, addGoodsPacked.isChecked(), remark);
+                }
+                AddGoodsActivity.this.finish();
             }
 
-            if (qualityGuaranteePeriod.equals("") || qualityGuaranteePeriodType.equals("")) {
-                createGoods(getApplicationContext(), goodsName, userID, houseID, roomID, furnitureID, categoryID, -1, Integer.parseInt(goodsNum), goodsPhoto1, goodsPhoto2, goodsPhoto3, buyTime, manufactureDate, null, null, null, false, false, false, remark);
-            }
-            else {
-                Date nowDate = new Date();
-                String now = DateUtils.fmtDateToYMD(nowDate);
-                Date productDate = DateUtils.fmtStrToDate(manufactureDate);
-                Date overtimeDate = DateUtils.addValue(productDate, Integer.parseInt(qualityGuaranteePeriod), qualityGuaranteePeriodType);
-                String overtime = DateUtils.fmtDateToYMD(overtimeDate);
-                boolean isOvertime;
-                isOvertime = DateUtils.compare_date(overtime, now) == -1;
-                createGoods(getApplicationContext(), goodsName, userID, houseID, roomID, furnitureID, categoryID, -1, Integer.parseInt(goodsNum), goodsPhoto1, goodsPhoto2, goodsPhoto3, buyTime, manufactureDate, qualityGuaranteePeriod, qualityGuaranteePeriodType, overtime, isOvertime, false, false, remark);
-            }
-            AddGoodsActivity.this.finish();
-            Intent intent=new Intent(AddGoodsActivity.this, edu.hebut.here.MainActivity.class);
-            startActivity(intent);
         });
     }
-    @Override
-    public void onBackPressed() {
-        Intent intent=new Intent(AddGoodsActivity.this, edu.hebut.here.MainActivity.class);
-        startActivity(intent);
-        super.onBackPressed();
-    }
-
 
     private void showDialog(String which) {
         View view = getLayoutInflater().inflate(R.layout.photo_choose_dialog, null);
@@ -238,7 +403,7 @@ public class AddGoodsActivity extends AppCompatActivity {
         ImageView btn_cancel = window.findViewById(R.id.btn_cancel);
 
         btn_picture.setOnClickListener(v -> {
-            switch (which){
+            switch (which) {
                 case "1":
                     if (ContextCompat.checkSelfPermission(AddGoodsActivity.this,
                             Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -302,7 +467,7 @@ public class AddGoodsActivity extends AppCompatActivity {
             }
         });
         btn_photo.setOnClickListener(v -> {
-            switch (which){
+            switch (which) {
                 case "1":
                     if (ContextCompat.checkSelfPermission(AddGoodsActivity.this,
                             Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
@@ -352,6 +517,7 @@ public class AddGoodsActivity extends AppCompatActivity {
         });
         btn_cancel.setOnClickListener(v -> dialog.dismiss());
     }
+
     /**
      * 处理回调结果
      */
@@ -364,17 +530,17 @@ public class AddGoodsActivity extends AppCompatActivity {
                 // 小图切割
                 case REQUEST_SMALL_IMAGE_CUTTING1:
                     if (data != null) {
-                        setPicToView(data, "1");
+                        setPicToView(data);
                     }
                     break;
                 case REQUEST_SMALL_IMAGE_CUTTING2:
                     if (data != null) {
-                        setPicToView(data, "2");
+                        setPicToView(data);
                     }
                     break;
                 case REQUEST_SMALL_IMAGE_CUTTING3:
                     if (data != null) {
-                        setPicToView(data, "3");
+                        setPicToView(data);
                     }
                     break;
                 // 大图切割
@@ -528,7 +694,7 @@ public class AddGoodsActivity extends AppCompatActivity {
         intent.putExtra(MediaStore.EXTRA_OUTPUT, pictureUri);
 //        intent.putExtra("which", which);
 //        System.out.println(intent.getStringExtra("which"));
-        switch (which){
+        switch (which) {
             case "1":
                 startActivityForResult(intent, REQUEST_IMAGE_CAPTURE1);
                 break;
@@ -579,7 +745,7 @@ public class AddGoodsActivity extends AppCompatActivity {
         intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
 
         // intent.putExtra("noFaceDetection", true); // no face detection
-        switch (which){
+        switch (which) {
             case "1":
                 startActivityForResult(intent, REQUEST_BIG_IMAGE_CUTTING1);
                 break;
@@ -625,7 +791,7 @@ public class AddGoodsActivity extends AppCompatActivity {
         intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
 
         // intent.putExtra("noFaceDetection", true); // no face detection
-        switch (which){
+        switch (which) {
             case "1":
                 startActivityForResult(intent, REQUEST_BIG_IMAGE_CUTTING1);
                 break;
@@ -642,9 +808,9 @@ public class AddGoodsActivity extends AppCompatActivity {
         String filePath = imageFile.getAbsolutePath();
         Cursor cursor = context.getContentResolver().query(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                new String[] { MediaStore.Images.Media._ID },
+                new String[]{MediaStore.Images.Media._ID},
                 MediaStore.Images.Media.DATA + "=? ",
-                new String[] { filePath }, null);
+                new String[]{filePath}, null);
 
         if (cursor != null && cursor.moveToFirst()) {
             int id = cursor.getInt(cursor
@@ -668,7 +834,7 @@ public class AddGoodsActivity extends AppCompatActivity {
      * 小图模式中，保存图片后，设置到视图中
      * 将图片保存设置到视图中
      */
-    private void setPicToView(Intent data, String which) {
+    private void setPicToView(Intent data) {
         Bundle extras = data.getExtras();
         if (extras != null) {
             Bitmap photo = extras.getParcelable("data");
@@ -696,7 +862,7 @@ public class AddGoodsActivity extends AppCompatActivity {
                 }
             }
             // 在视图中显示图片
-            switch (data.getStringExtra("which")){
+            switch (data.getStringExtra("which")) {
                 case "1":
                     addGoodsGoodsPhoto1.setImageBitmap(photo);
                     break;
